@@ -505,45 +505,47 @@ function performSearch() {
 
 function applyFilters() {
   const query = document.getElementById('searchInput').value.toLowerCase();
-  const category = document.getElementById('categoryFilter').value;
-  const priceRange = document.getElementById('priceFilter').value;
-  const condition = document.getElementById('conditionFilter').value;
-  const regionInput = document.getElementById('regionFilter').value;
+
+  // 칩 기반 멀티 선택 값 가져오기
+  const activeCategoryChips = document.querySelectorAll('#categoryChips .chip.active');
+  const selectedCategories = Array.from(activeCategoryChips).map(chip => chip.getAttribute('data-value'));
+  const isAllCategories = selectedCategories.includes('all');
+
+  const activeConditionChips = document.querySelectorAll('#conditionChips .chip.active');
+  const selectedConditions = Array.from(activeConditionChips).map(chip => chip.getAttribute('data-value'));
+  const isAllConditions = selectedConditions.includes('all');
+
+  const activeRegionChips = document.querySelectorAll('#regionChips .chip.active');
+  const selectedRegions = Array.from(activeRegionChips).map(chip => chip.getAttribute('data-value'));
+  const isAllRegions = selectedRegions.includes('all');
+
+  // 가격 범위
+  const minPrice = Number(document.getElementById('minPrice').value) || 0;
+  const maxPrice = Number(document.getElementById('maxPrice').value) || Infinity;
 
   currentProducts = products.filter(product => {
-    // 🔍 검색어 필터
+    // 🔍 검색어
     const matchesSearch = !query ||
       product.title.toLowerCase().includes(query) ||
       product.description.toLowerCase().includes(query) ||
       (product.categoryName && product.categoryName.toLowerCase().includes(query));
 
-    // 📁 카테고리 필터
-    const matchesCategory = category === 'all' || product.category === category;
+    // 📁 카테고리 (복수)
+    const matchesCategory = isAllCategories || selectedCategories.length === 0 || selectedCategories.includes(product.category);
 
-    // 💰 가격 필터
-    let matchesPrice = true;
-    if (priceRange !== 'all') {
-      const parts = priceRange.split('-');
-      const min = Number(parts[0]);
-      const max = Number(parts[1]);
-      matchesPrice = product.price >= min && product.price <= max;
-    }
+    // ✨ 상태 (복수)
+    const matchesCondition = isAllConditions || selectedConditions.length === 0 || selectedConditions.includes(product.condition);
 
-    // ✨ 상태 필터
-    const matchesCondition = condition === 'all' || product.condition === condition;
+    // 📍 지역 (복수)
+    const matchesRegion = isAllRegions || selectedRegions.length === 0 || selectedRegions.includes(product.region);
 
-    // 📍 지역 필터
-    const matchesRegion = regionInput === 'all' || product.region === regionInput;
+    // 💰 가격
+    const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
 
-    return matchesSearch && matchesCategory && matchesPrice && matchesCondition && matchesRegion;
+    return matchesSearch && matchesCategory && matchesCondition && matchesRegion && matchesPrice;
   });
 
   renderProducts(currentProducts);
-
-  // 검색 결과 알림 (선택 사항)
-  if (query && currentProducts.length === 0) {
-    showNotification('검색 결과', '일치하는 상품이 없습니다.', 'info');
-  }
 }
 
 function toggleFavorite(productId) {
@@ -560,67 +562,98 @@ function setupEventListeners() {
 
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
+    searchInput.addEventListener('input', applyFilters);
     searchInput.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') performSearch();
     });
   }
 
-  // 카테고리 클릭 이벤트 추가
+  // 상단 내비게이션 클릭
   const navItems = document.querySelectorAll('.nav-item');
   navItems.forEach(item => {
     item.addEventListener('click', () => {
-      // 액티브 클래스 변경
+      const category = item.getAttribute('data-category');
+
+      // 칩 메뉴 동기화
+      const container = document.getElementById('categoryChips');
+      container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      const targetChip = container.querySelector(`[data-value="${category}"]`);
+      if (targetChip) targetChip.classList.add('active');
+
       navItems.forEach(nav => nav.classList.remove('active'));
       item.classList.add('active');
-
-      const category = item.getAttribute('data-category');
-      filterByCategory(category);
+      applyFilters();
     });
   });
 
-  // 필터 셀렉트박스 변경 이벤트 추가
-  ['categoryFilter', 'priceFilter', 'conditionFilter', 'regionFilter'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('change', () => {
-        // 셀렉트박스에서 카테고리 변경 시 상단 nav와 동기화
-        if (id === 'categoryFilter') {
-          const category = el.value;
-          const navItems = document.querySelectorAll('.nav-item');
-          navItems.forEach(nav => {
-            nav.classList.toggle('active', nav.getAttribute('data-category') === category);
-          });
+  // 칩 클릭 이벤트
+  document.querySelectorAll('.multi-select-container').forEach(container => {
+    container.addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
 
-          const sectionTitle = document.querySelector('.section-title');
-          if (sectionTitle) {
-            if (category === 'all') sectionTitle.textContent = '전체 상품';
-            else {
-              const categoryName = document.querySelector(`.nav-item[data-category="${category}"]`).textContent;
-              sectionTitle.textContent = `${categoryName} 상품`;
-            }
-          }
+      const value = chip.getAttribute('data-value');
+      const allChip = container.querySelector('[data-value="all"]');
+
+      if (value === 'all') {
+        container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      } else {
+        allChip.classList.remove('active');
+        chip.classList.toggle('active');
+        if (container.querySelectorAll('.chip.active').length === 0) {
+          allChip.classList.add('active');
         }
-        applyFilters();
-      });
-    }
+      }
+
+      // 상단 내비게이션과 동기화
+      if (container.id === 'categoryChips') {
+        const activeChips = container.querySelectorAll('.chip.active');
+        const selected = Array.from(activeChips).map(c => c.getAttribute('data-value'));
+        navItems.forEach(nav => {
+          const navCat = nav.getAttribute('data-category');
+          const isActive = (selected.includes('all') && navCat === 'all') ||
+            (!selected.includes('all') && selected.includes(navCat));
+          nav.classList.toggle('active', isActive);
+        });
+      }
+      applyFilters();
+    });
   });
+
+  // 가격 입력 시 실시간 필터
+  document.getElementById('minPrice').addEventListener('input', applyFilters);
+  document.getElementById('maxPrice').addEventListener('input', applyFilters);
+}
+
+function resetFilters() {
+  document.querySelectorAll('.multi-select-container').forEach(container => {
+    container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    container.querySelector('[data-value="all"]').classList.add('active');
+  });
+
+  document.getElementById('minPrice').value = '';
+  document.getElementById('maxPrice').value = '';
+  document.getElementById('searchInput').value = '';
+
+  // 상단 내비게이션 초기화
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
+
+  applyFilters();
+  showNotification('초기화', '필터가 초기화되었습니다.', 'info');
 }
 
 function filterByCategory(category) {
-  // 카테고리 셀렉트박스와 동기화
-  const categorySelect = document.getElementById('categoryFilter');
-  if (categorySelect) categorySelect.value = category;
-
-  const sectionTitle = document.querySelector('.section-title');
-
-  if (category === 'all') {
-    if (sectionTitle) sectionTitle.textContent = '전체 상품';
-  } else {
-    if (sectionTitle) {
-      const categoryName = document.querySelector(`.nav-item[data-category="${category}"]`).textContent;
-      sectionTitle.textContent = `${categoryName} 상품`;
-    }
+  const container = document.getElementById('categoryChips');
+  if (container) {
+    container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    const targetChip = container.querySelector(`[data-value="${category}"]`);
+    if (targetChip) targetChip.classList.add('active');
   }
+
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === category));
 
   applyFilters();
 }
@@ -704,6 +737,7 @@ window.viewFavorites = viewFavorites;
 window.toggleTheme = toggleTheme;
 window.showEditModal = showEditModal;
 window.handleEditProduct = handleEditProduct;
+window.resetFilters = resetFilters;
 
 // CSS 추가
 const style = document.createElement('style');
