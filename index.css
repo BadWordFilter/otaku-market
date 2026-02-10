@@ -51,6 +51,50 @@
     --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+[data-theme="light"] {
+    /* Light Theme Base */
+    --bg-primary: hsl(250, 20%, 98%);
+    --bg-secondary: hsl(250, 20%, 95%);
+    --bg-tertiary: hsl(250, 15%, 90%);
+    --bg-elevated: hsl(0, 0%, 100%);
+
+    /* Glass Effect (Light) */
+    --glass-bg: hsla(0, 0%, 100%, 0.7);
+    --glass-border: hsla(280, 20%, 60%, 0.2);
+
+    /* Text Colors (Inverted) */
+    --text-primary: hsl(250, 30%, 15%);
+    --text-secondary: hsl(250, 10%, 40%);
+    --text-tertiary: hsl(250, 5%, 60%);
+
+    /* Shadows (Softer) */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --shadow-glow: 0 0 24px rgba(168, 85, 247, 0.2);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: var(--bg-elevated);
+    border: 1px solid var(--glass-border);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: var(--spacing-sm);
+    transition: var(--transition-normal);
+}
+
+.theme-toggle:hover {
+    background: var(--bg-tertiary);
+    transform: rotate(15deg);
+}
+
 /* Reset & Base */
 * {
     margin: 0;

@@ -68,10 +68,15 @@ let currentUser = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  // Theme initialization
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
   initializeAuth();
   loadProducts();
   loadUserStats();
   setupEventListeners();
+  updateThemeIcon();
 });
 
 // ===== Firebase Authentication =====
@@ -217,6 +222,7 @@ function updateHeaderForUser() {
       : currentUser.nickname.charAt(0);
 
     headerActions.innerHTML = `
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경">🌙</button>
       <button class="btn btn-primary" onclick="showSellModal()">판매하기</button>
       <div class="user-profile" onclick="toggleDropdown()">
         <div class="user-avatar">${avatarText}</div>
@@ -243,10 +249,14 @@ function updateHeaderForUser() {
     `;
   } else {
     headerActions.innerHTML = `
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경">🌙</button>
       <button class="btn btn-secondary" onclick="showLoginModal()">로그인</button>
       <button class="btn btn-primary" onclick="showSellModal()">판매하기</button>
     `;
   }
+
+  // Update icon after re-render
+  updateThemeIcon();
 }
 
 // ===== Firebase Firestore 제품 관리 =====
@@ -728,6 +738,26 @@ function showNotification(title, message, type = 'success') {
 }
 
 // Utility Functions
+function toggleTheme() {
+  const currentTheme = localStorage.getItem('theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeIcon();
+}
+
+function updateThemeIcon() {
+  const toggleBtns = document.querySelectorAll('.theme-toggle');
+  const currentTheme = localStorage.getItem('theme') || 'dark';
+  const icon = currentTheme === 'dark' ? '🌙' : '☀️';
+
+  toggleBtns.forEach(btn => {
+    btn.textContent = icon;
+    btn.setAttribute('aria-label', currentTheme === 'dark' ? '다크 모드' : '라이트 모드');
+  });
+}
+
 function formatPrice(price) {
   return price.toLocaleString('ko-KR');
 }
@@ -773,6 +803,7 @@ window.handleDeleteProduct = handleDeleteProduct;
 window.showProductDetail = showProductDetail;
 window.toggleFavorite = toggleFavorite;
 window.performSearch = performSearch;
+window.toggleTheme = toggleTheme;
 window.toggleDropdown = toggleDropdown;
 window.closeDropdown = closeDropdown;
 window.viewMyProfile = viewMyProfile;
