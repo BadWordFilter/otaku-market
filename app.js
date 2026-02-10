@@ -332,6 +332,19 @@ async function handleSellProduct(event) {
   }
 }
 
+async function handleDeleteProduct(productId) {
+  if (!confirm('정말로 이 상품을 삭제하시겠습니까?')) return;
+
+  try {
+    await deleteDoc(doc(db, 'products', productId));
+    closeModal('productModal');
+    showNotification('삭제 완료', '상품이 삭제되었습니다.');
+  } catch (error) {
+    console.error('상품 삭제 오류:', error);
+    showNotification('삭제 실패', '상품 삭제 중 오류가 발생했습니다.', 'error');
+  }
+}
+
 // ===== 렌더링 및 UI 함수들 =====
 
 function renderProducts(productsToRender) {
@@ -517,6 +530,21 @@ function showProductDetail(productId) {
   document.getElementById('sellerName').textContent = product.seller || '판매자';
   document.getElementById('sellerStats').textContent = `⭐ 5.0 · 판매 0건`;
 
+  // Show/Hide Delete Button based on ownership
+  const modalActions = document.querySelector('#productModal .modal-actions');
+
+  if (currentUser && (currentUser.uid === product.sellerUID || currentUser.email === product.sellerEmail)) {
+    modalActions.innerHTML = `
+      <button class="btn btn-secondary btn-large" style="background-color: #ef4444; color: white; border: none; flex: 1;" onclick="handleDeleteProduct('${product.id}')">🗑️ 상품 삭제하기</button>
+      <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="closeModal('productModal')">닫기</button>
+    `;
+  } else {
+    modalActions.innerHTML = `
+      <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="showNotification('준비 중', '채팅 기능은 준비 중입니다.', 'info')">💬 채팅하기</button>
+      <button class="btn btn-primary btn-large" style="flex: 1;" onclick="showNotification('준비 중', '결제 기능은 준비 중입니다.', 'info')">💰 구매하기</button>
+    `;
+  }
+
   document.getElementById('productModal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -700,6 +728,7 @@ window.handleSignup = handleSignup;
 window.handleLogout = handleLogout;
 window.handleSocialLogin = handleSocialLogin;
 window.handleSellProduct = handleSellProduct;
+window.handleDeleteProduct = handleDeleteProduct;
 window.showProductDetail = showProductDetail;
 window.toggleFavorite = toggleFavorite;
 window.performSearch = performSearch;
