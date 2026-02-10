@@ -55,106 +55,121 @@
       <div class="nav-item" data-category="card">🃏 카드/TCG</div>
       <div class="nav-item" data-category="plush">🧸 인형/플러시</div>
       <div class="nav-item" data-category="merch">✨ 기타 굿즈</div>
+      <div class="nav-item" data-tab="community">💬 커뮤니티</div>
     </div>
   </nav>
 
   <!-- Main Container -->
   <div class="container">
-    <!-- Hero Section -->
-    <section class="hero">
-      <h1 class="hero-title">오타쿠를 위한<br>특별한 거래 공간</h1>
-      <p class="hero-subtitle">게임, 애니메이션, 피규어 등 덕후 아이템 전문 중고 거래 플랫폼</p>
-
-      <div class="stats">
-        <div class="stat-item">
-          <div class="stat-value" id="statProducts">0</div>
-          <div class="stat-label">등록 상품</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="statUsers">0</div>
-          <div class="stat-label">활성 유저</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="statTrades">0</div>
-          <div class="stat-label">거래 완료</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Filter Section -->
-    <section class="filter-section">
-      <div class="filter-grid">
-        <!-- Category Filter -->
-        <div class="filter-group">
-          <label class="filter-group-label">카테고리 (복수 선택)</label>
-          <div class="multi-select-container" id="categoryChips">
-            <div class="chip active" data-value="all">전체</div>
-            <div class="chip" data-value="game">🎮 게임</div>
-            <div class="chip" data-value="figure">🗿 피규어</div>
-            <div class="chip" data-value="anime">📺 애니 굿즈</div>
-            <div class="chip" data-value="manga">📚 만화책</div>
-            <div class="chip" data-value="card">🃏 카드/TCG</div>
-            <div class="chip" data-value="plush">🧸 인형/플러시</div>
-            <div class="chip" data-value="merch">✨ 기타 굿즈</div>
-          </div>
-        </div>
-
-        <!-- Condition Filter -->
-        <div class="filter-group">
-          <label class="filter-group-label">상품 상태 (복수 선택)</label>
-          <div class="multi-select-container" id="conditionChips">
-            <div class="chip active" data-value="all">전체</div>
-            <div class="chip" data-value="new">✨ 미개봉 새상품</div>
-            <div class="chip" data-value="like-new">👍 거의 새것</div>
-            <div class="chip" data-value="good">🙂 양호</div>
-            <div class="chip" data-value="fair">🛠 사용감 있음</div>
-          </div>
-        </div>
-
-        <!-- Region Filter -->
-        <div class="filter-group">
-          <label class="filter-group-label">지역 (복수 선택)</label>
-          <div class="multi-select-container" id="regionChips">
-            <div class="chip active" data-value="all">전국</div>
-            <div class="chip" data-value="seoul">서울</div>
-            <div class="chip" data-value="gyeonggi">경기</div>
-            <div class="chip" data-value="incheon">인천</div>
-            <div class="chip" data-value="busan">부산</div>
-            <div class="chip" data-value="daegu">대구</div>
-            <div class="chip" data-value="other">기타</div>
-          </div>
-        </div>
-
-        <!-- Price Range Filter -->
-        <div class="filter-group">
-          <label class="filter-group-label">가격 범위 (원)</label>
-          <div class="price-range-inputs">
-            <input type="number" class="price-input" id="minPrice" placeholder="최소 금액" min="0" step="1000">
-            <span class="price-separator">~</span>
-            <input type="number" class="price-input" id="maxPrice" placeholder="최대 금액" min="0" step="1000">
-          </div>
-          <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; padding: 10px;"
-            onclick="resetFilters()">필터 초기화</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Products Section -->
-    <section>
+    <!-- Community Section (Hidden by default) -->
+    <section id="communitySection" style="display: none; margin-top: 40px;">
       <div class="section-header">
-        <h2 class="section-title">전체 상품</h2>
-        <select class="sort-select" id="sortSelect">
-          <option value="recent">최신순</option>
-          <option value="low-price">낮은 가격순</option>
-          <option value="high-price">높은 가격순</option>
-          <option value="popular">인기순</option>
-        </select>
+        <h2 class="section-title">커뮤니티 피드</h2>
+        <button class="btn btn-primary" onclick="showCommunityWriteModal()">글쓰기</button>
       </div>
-
-      <div class="product-grid" id="productGrid">
-        <!-- Products will be dynamically inserted here -->
+      <div id="communityGrid" class="community-grid">
+        <!-- Community posts will be dynamically inserted here -->
       </div>
     </section>
+
+    <!-- Marketplace Section -->
+    <div id="marketplaceSection">
+      <!-- Hero Section -->
+      <section class="hero">
+        <h1 class="hero-title">오타쿠를 위한<br>특별한 거래 공간</h1>
+        <p class="hero-subtitle">게임, 애니메이션, 피규어 등 덕후 아이템 전문 중고 거래 플랫폼</p>
+
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="statProducts">0</div>
+            <div class="stat-label">등록 상품</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statUsers">0</div>
+            <div class="stat-label">활성 유저</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statTrades">0</div>
+            <div class="stat-label">거래 완료</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter Section -->
+      <section class="filter-section">
+        <div class="filter-grid">
+          <!-- Category Filter -->
+          <div class="filter-group">
+            <label class="filter-group-label">카테고리 (복수 선택)</label>
+            <div class="multi-select-container" id="categoryChips">
+              <div class="chip active" data-value="all">전체</div>
+              <div class="chip" data-value="game">🎮 게임</div>
+              <div class="chip" data-value="figure">🗿 피규어</div>
+              <div class="chip" data-value="anime">📺 애니 굿즈</div>
+              <div class="chip" data-value="manga">📚 만화책</div>
+              <div class="chip" data-value="card">🃏 카드/TCG</div>
+              <div class="chip" data-value="plush">🧸 인형/플러시</div>
+              <div class="chip" data-value="merch">✨ 기타 굿즈</div>
+            </div>
+          </div>
+
+          <!-- Condition Filter -->
+          <div class="filter-group">
+            <label class="filter-group-label">상품 상태 (복수 선택)</label>
+            <div class="multi-select-container" id="conditionChips">
+              <div class="chip active" data-value="all">전체</div>
+              <div class="chip" data-value="new">✨ 미개봉 새상품</div>
+              <div class="chip" data-value="like-new">👍 거의 새것</div>
+              <div class="chip" data-value="good">🙂 양호</div>
+              <div class="chip" data-value="fair">🛠 사용감 있음</div>
+            </div>
+          </div>
+
+          <!-- Region Filter -->
+          <div class="filter-group">
+            <label class="filter-group-label">지역 (복수 선택)</label>
+            <div class="multi-select-container" id="regionChips">
+              <div class="chip active" data-value="all">전국</div>
+              <div class="chip" data-value="seoul">서울</div>
+              <div class="chip" data-value="gyeonggi">경기</div>
+              <div class="chip" data-value="incheon">인천</div>
+              <div class="chip" data-value="busan">부산</div>
+              <div class="chip" data-value="daegu">대구</div>
+              <div class="chip" data-value="other">기타</div>
+            </div>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="filter-group">
+            <label class="filter-group-label">가격 범위 (원)</label>
+            <div class="price-range-inputs">
+              <input type="number" class="price-input" id="minPrice" placeholder="최소 금액" min="0" step="1000">
+              <span class="price-separator">~</span>
+              <input type="number" class="price-input" id="maxPrice" placeholder="최대 금액" min="0" step="1000">
+            </div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; padding: 10px;"
+              onclick="resetFilters()">필터 초기화</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products Section -->
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">전체 상품</h2>
+          <select class="sort-select" id="sortSelect">
+            <option value="recent">최신순</option>
+            <option value="low-price">낮은 가격순</option>
+            <option value="high-price">높은 가격순</option>
+            <option value="popular">인기순</option>
+          </select>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          <!-- Products will be dynamically inserted here -->
+        </div>
+      </section>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -589,6 +604,35 @@
 
       <button class="btn btn-primary" style="width: 100%; padding: 14px;"
         onclick="closeModal('profileModal')">닫기</button>
+    </div>
+  </div>
+
+  <!-- Community Write Modal -->
+  <div class="modal" id="communityWriteModal">
+    <div class="modal-content" style="max-width: 550px;">
+      <button class="modal-close" onclick="closeModal('communityWriteModal')">×</button>
+      <div class="modal-body">
+        <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 8px;">글쓰기</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 32px;">다른 덕후들과 소통해보세요!</p>
+
+        <form id="communityWriteForm" onsubmit="handlePostCommunity(event)">
+          <div class="form-group">
+            <label class="form-label">카테고리</label>
+            <select class="form-input" id="postCategory" required>
+              <option value="general">자유글</option>
+              <option value="question">질문/정보</option>
+              <option value="boast">득템 인증</option>
+              <option value="collection">컬렉션</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">내용</label>
+            <textarea class="form-input" id="postContent" rows="6" placeholder="무슨 덕질 중이신가요?" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary"
+            style="width: 100%; margin-top: 24px; padding: 14px;">등록하기</button>
+        </form>
+      </div>
     </div>
   </div>
 

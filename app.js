@@ -22,8 +22,11 @@ import {
 // ===== 전역 변수 =====
 let products = [];
 let currentProducts = [];
+let communityPosts = [];
 let favorites = new Set();
+let communityFavorites = new Set();
 let currentUser = null;
+let activeTab = 'home'; // 'home' or 'community'
 
 // ===== 초기화 =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initializeAuth();
   loadProducts();
+  loadCommunityPosts(); // 커뮤니티 게시글 로드
   loadUserStats(); // 유저 통계 (가입자 수 등)
   setupEventListeners();
   updateThemeIcon();
@@ -272,6 +276,121 @@ async function handleDeleteProduct(productId) {
   }
 }
 
+// ===== 커뮤니티 관리 (Community Management) =====
+
+async function loadCommunityPosts() {
+  const postsRef = collection(db, 'communityPosts');
+  const q = query(postsRef, orderBy('createdAt', 'desc'));
+
+  onSnapshot(q, (snapshot) => {
+    communityPosts = [];
+    snapshot.forEach((doc) => {
+      communityPosts.push({ id: doc.id, ...doc.data() });
+    });
+    if (activeTab === 'community') {
+      renderCommunity();
+    }
+  });
+}
+
+function showCommunityWriteModal() {
+  if (!currentUser) {
+    showNotification('로그인 필요', '게시글을 쓰려면 로그인이 필요합니다.', 'error');
+    showLoginModal();
+    return;
+  }
+  document.getElementById('communityWriteModal').classList.add('active');
+}
+
+async function handlePostCommunity(event) {
+  event.preventDefault();
+  if (!currentUser) return;
+
+  const category = document.getElementById('postCategory').value;
+  const content = document.getElementById('postContent').value;
+
+  const categoryNames = {
+    general: '자유글',
+    question: '질문/정보',
+    boast: '득템 인증',
+    collection: '컬렉션'
+  };
+
+  try {
+    await addDoc(collection(db, 'communityPosts'), {
+      category,
+      categoryName: categoryNames[category] || '자유글',
+      content,
+      author: currentUser.nickname,
+      authorUID: currentUser.uid,
+      likes: 0,
+      createdAt: new Date()
+    });
+    closeModal('communityWriteModal');
+    document.getElementById('communityWriteForm').reset();
+    showNotification('등록 완료', '게시글이 등록되었습니다.');
+  } catch (error) {
+    console.error('커뮤니티 등록 오류:', error);
+    showNotification('등록 실패', '오류가 발생했습니다.', 'error');
+  }
+}
+
+async function togglePostLike(postId) {
+  const post = communityPosts.find(p => p.id === postId);
+  if (!post) return;
+
+  if (communityFavorites.has(postId)) {
+    communityFavorites.delete(postId);
+    await updateDoc(doc(db, 'communityPosts', postId), { likes: Math.max(0, (post.likes || 0) - 1) });
+  } else {
+    communityFavorites.add(postId);
+    await updateDoc(doc(db, 'communityPosts', postId), { likes: (post.likes || 0) + 1 });
+  }
+}
+
+function renderCommunity() {
+  const grid = document.getElementById('communityGrid');
+  if (communityPosts.length === 0) {
+    grid.innerHTML = `<div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+        <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
+        <div style="font-size: 18px; font-weight: 600;">아직 게시글이 없습니다. 첫 글을 남겨보세요!</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = communityPosts.map(post => {
+    const timeStr = post.createdAt?.seconds
+      ? new Date(post.createdAt.seconds * 1000).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      : '방금 전';
+
+    const isLiked = communityFavorites.has(post.id);
+
+    return `
+      <div class="community-card">
+        <div class="community-header">
+          <div class="community-user">
+            <div class="community-avatar">${(post.author || '덕후').charAt(0)}</div>
+            <div class="community-user-info">
+              <div class="community-nickname">${post.author || '익명 덕후'}</div>
+              <div class="community-time">${timeStr}</div>
+            </div>
+          </div>
+          <div class="community-category">${post.categoryName}</div>
+        </div>
+        <div class="community-content">${post.content}</div>
+        <div class="community-footer">
+          <div class="community-action ${isLiked ? 'liked' : ''}" onclick="togglePostLike('${post.id}')">
+            ${isLiked ? '❤️' : '🤍'} ${post.likes || 0}
+          </div>
+          <div class="community-action" onclick="showNotification('준비 중', '댓글 기능은 준비 중입니다.', 'info')">
+            💬 댓글
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 // 수정 모달 열기
 function showEditModal(productId) {
   const product = products.find(p => p.id === productId);
@@ -500,6 +619,12 @@ function showProductDetail(productId) {
 }
 
 function performSearch() {
+  if (activeTab !== 'home') {
+    switchTab('home');
+    // 상단 내비 전체 탭 활성화
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
+  }
   applyFilters();
 }
 
@@ -572,17 +697,25 @@ function setupEventListeners() {
   const navItems = document.querySelectorAll('.nav-item');
   navItems.forEach(item => {
     item.addEventListener('click', () => {
+      const tab = item.getAttribute('data-tab');
       const category = item.getAttribute('data-category');
 
-      // 칩 메뉴 동기화
-      const container = document.getElementById('categoryChips');
-      container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      const targetChip = container.querySelector(`[data-value="${category}"]`);
-      if (targetChip) targetChip.classList.add('active');
+      if (tab === 'community') {
+        switchTab('community');
+      } else {
+        switchTab('home');
+        // 칩 메뉴 동기화
+        if (category) {
+          const container = document.getElementById('categoryChips');
+          container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          const targetChip = container.querySelector(`[data-value="${category}"]`);
+          if (targetChip) targetChip.classList.add('active');
+          applyFilters();
+        }
+      }
 
       navItems.forEach(nav => nav.classList.remove('active'));
       item.classList.add('active');
-      applyFilters();
     });
   });
 
@@ -718,6 +851,22 @@ function viewFavorites() {
   if (sectionTitle) sectionTitle.textContent = '찜한 상품 목록';
 }
 
+function switchTab(tab) {
+  activeTab = tab;
+  const marketplaceSection = document.getElementById('marketplaceSection');
+  const communitySection = document.getElementById('communitySection');
+
+  if (tab === 'community') {
+    if (marketplaceSection) marketplaceSection.style.display = 'none';
+    if (communitySection) communitySection.style.display = 'block';
+    renderCommunity();
+  } else {
+    if (marketplaceSection) marketplaceSection.style.display = 'block';
+    if (communitySection) communitySection.style.display = 'none';
+    renderProducts(currentProducts);
+  }
+}
+
 // ===== Window 객체에 함수 할당 (필수) =====
 window.showLoginModal = showLoginModal;
 window.showSellModal = showSellModal;
@@ -743,6 +892,10 @@ window.showEditModal = showEditModal;
 window.handleEditProduct = handleEditProduct;
 window.resetFilters = resetFilters;
 window.showGuide = showGuide;
+window.showCommunityWriteModal = showCommunityWriteModal;
+window.handlePostCommunity = handlePostCommunity;
+window.togglePostLike = togglePostLike;
+window.switchTab = switchTab;
 
 // CSS 추가
 const style = document.createElement('style');
