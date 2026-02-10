@@ -63,6 +63,38 @@
 
   <!-- Main Container -->
   <div class="container">
+    <!-- Intro Section (Initial Landing) -->
+    <section id="introSection" class="intro-section">
+      <div class="intro-content">
+        <div class="intro-logo">🎮</div>
+        <h1 class="intro-title">오타쿠 마켓에 오신 것을 환영합니다</h1>
+        <p class="intro-desc">게임, 애니메이션, 피규어 등 당신의 소중한 아이템을 위한<br>가장 특별하고 안전한 거래 공간입니다.</p>
+
+        <div class="intro-stats-grid">
+          <div class="intro-stat-card">
+            <div class="intro-stat-value" id="statProductsIntro">0</div>
+            <div class="intro-stat-label">등록된 보물들</div>
+          </div>
+          <div class="intro-stat-card">
+            <div class="intro-stat-value" id="statUsersIntro">0</div>
+            <div class="intro-stat-label">함께하는 오타쿠들</div>
+          </div>
+          <div class="intro-stat-card">
+            <div class="intro-stat-value" id="statTradesIntro">0</div>
+            <div class="intro-stat-label">완료된 거래</div>
+          </div>
+          <div class="intro-stat-card">
+            <div class="intro-stat-value" id="statCommunityIntro">0</div>
+            <div class="intro-stat-label">활발한 소통</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary intro-start-btn" onclick="switchTab('home')">
+          마켓 입장하기 🚀
+        </button>
+      </div>
+    </section>
+
     <!-- Community Section (Hidden by default) -->
     <section id="communitySection" style="display: none; margin-top: 40px;">
       <div class="section-header">
@@ -75,7 +107,7 @@
     </section>
 
     <!-- Marketplace Section -->
-    <div id="marketplaceSection">
+    <div id="marketplaceSection" style="display: none;">
       <!-- Mobile Page Banner (Mobile Only) -->
       <div class="mobile-page-banner" id="mobilePageBanner">
         <div class="banner-content">
@@ -93,21 +125,6 @@
       <section class="hero" id="heroSection">
         <h1 class="hero-title">오타쿠를 위한<br>특별한 거래 공간</h1>
         <p class="hero-subtitle">게임, 애니메이션, 피규어 등 덕후 아이템 전문 중고 거래 플랫폼</p>
-
-        <div class="stats">
-          <div class="stat-item">
-            <div class="stat-value" id="statProducts">0</div>
-            <div class="stat-label">등록 상품</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value" id="statUsers">0</div>
-            <div class="stat-label">활성 유저</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value" id="statTrades">0</div>
-            <div class="stat-label">거래 완료</div>
-          </div>
-        </div>
       </section>
 
       <!-- Filter Section -->

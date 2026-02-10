@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUserStats(); // 유저 통계 (가입자 수 등)
   setupEventListeners();
   updateThemeIcon();
-  updateMobileBanner('home'); // 초기 배너 설정
+
+  // 처음 접속 시 인트로 섹션 보여주기
+  switchTab('intro');
 
   console.log('🚀 오타쿠 마켓 초기화 완료');
 });
@@ -224,9 +226,9 @@ async function loadProducts() {
     currentProducts = [...products];
     renderProducts(currentProducts);
 
-    // 통계 업데이트
-    animateValue("statProducts", 0, products.length, 1000);
-    animateValue("statTrades", 0, 0, 1000); // 거래 기능 미구현으로 0
+    // 통계 업데이트 (인트로 전용)
+    animateValue("statProductsIntro", 0, products.length, 1500);
+    animateValue("statTradesIntro", 0, 154, 1500); // 예시 데이터
   });
 }
 
@@ -299,6 +301,10 @@ async function loadCommunityPosts() {
     snapshot.forEach((doc) => {
       communityPosts.push({ id: doc.id, ...doc.data() });
     });
+
+    // 인트로 통계용
+    animateValue("statCommunityIntro", 0, communityPosts.length, 1500);
+
     if (activeTab === 'community') {
       renderCommunity();
     }
@@ -548,7 +554,7 @@ function getColorForCategory(category) {
 
 function loadUserStats() {
   onSnapshot(collection(db, 'users'), (snapshot) => {
-    animateValue("statUsers", 0, snapshot.size, 1000);
+    animateValue("statUsersIntro", 0, snapshot.size, 1500);
   });
 }
 
@@ -931,6 +937,9 @@ function switchTab(tab) {
   activeTab = tab;
   const marketplaceSection = document.getElementById('marketplaceSection');
   const communitySection = document.getElementById('communitySection');
+  const introSection = document.getElementById('introSection');
+  const header = document.querySelector('.header');
+  const nav = document.querySelector('.nav');
   const headerCommunityBtn = document.getElementById('headerCommunityBtn');
   const navItems = document.querySelectorAll('.nav-item');
   const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
@@ -939,6 +948,24 @@ function switchTab(tab) {
   mobileNavItems.forEach(item => {
     item.classList.toggle('active', item.getAttribute('data-tab') === tab);
   });
+
+  if (tab === 'intro') {
+    if (introSection) introSection.style.display = 'flex';
+    if (marketplaceSection) marketplaceSection.style.display = 'none';
+    if (communitySection) communitySection.style.display = 'none';
+    if (header) header.style.display = 'none';
+    if (nav) nav.style.display = 'none';
+    const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
+    if (mobileBottomNav) mobileBottomNav.style.display = 'none';
+    return;
+  }
+
+  // 홈이나 커뮤니티 진입 시 헤더/내비 다시 보여주기
+  if (header) header.style.display = 'block';
+  if (nav) nav.style.display = 'block';
+  if (introSection) introSection.style.display = 'none';
+  const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
+  if (mobileBottomNav && window.innerWidth <= 768) mobileBottomNav.style.display = 'flex';
 
   if (tab === 'community') {
     if (marketplaceSection) marketplaceSection.style.display = 'none';
