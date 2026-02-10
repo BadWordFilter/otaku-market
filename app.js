@@ -181,11 +181,18 @@ async function handleSocialLogin(provider) {
       closeModal('loginModal');
     } catch (error) {
       console.error('Google 로그인 오류:', error);
-      showNotification('로그인 실패', 'Google 로그인에 실패했습니다.', 'error');
+
+      let message = 'Google 로그인에 실패했습니다.';
+      if (error.code === 'auth/unauthorized-domain') {
+        message = 'Firebase Console에서 도메인을 승인해주세요.\n이메일/비밀번호 로그인을 사용해주세요.';
+      } else if (error.code === 'auth/popup-blocked') {
+        message = '팝업이 차단되었습니다. 팝업 허용 후 다시 시도해주세요.';
+      }
+
+      showNotification('로그인 실패', message, 'error');
     }
   } else {
-    // 카카오, 네이버는 아직 시뮬레이션
-    showNotification('준비 중', `${provider} 로그인은 준비 중입니다. Google 로그인을 사용해주세요.`, 'info');
+    showNotification('오류', '지원하지 않는 로그인 방식입니다.', 'error');
   }
 }
 
