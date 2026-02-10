@@ -505,18 +505,99 @@ function setupEventListeners() {
     if (event.target.classList.contains('modal')) event.target.classList.remove('active');
     if (!event.target.matches('.user-profile') && !event.target.closest('.user-profile')) closeDropdown();
   };
+
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') performSearch();
     });
   }
+
+  // 카테고리 클릭 이벤트 추가
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // 액티브 클래스 변경
+      navItems.forEach(nav => nav.classList.remove('active'));
+      item.classList.add('active');
+
+      const category = item.getAttribute('data-category');
+      filterByCategory(category);
+    });
+  });
 }
 
-// 미구현 기능 더미
-function viewMyProfile() { showNotification('준비 중', '내 프로필 기능은 준비 중입니다.', 'info'); }
-function viewMyListings() { showNotification('준비 중', '내 상품 목록 기능은 준비 중입니다.', 'info'); }
-function viewFavorites() { showNotification('준비 중', '찜한 상품 목록 기능은 준비 중입니다.', 'info'); }
+function filterByCategory(category) {
+  const sectionTitle = document.querySelector('.section-title');
+
+  if (category === 'all') {
+    currentProducts = [...products];
+    if (sectionTitle) sectionTitle.textContent = '전체 상품';
+  } else {
+    currentProducts = products.filter(p => p.category === category);
+    if (sectionTitle) {
+      const categoryName = document.querySelector(`.nav-item[data-category="${category}"]`).textContent;
+      sectionTitle.textContent = `${categoryName} 상품`;
+    }
+  }
+  renderProducts(currentProducts);
+}
+
+// 마이페이지 관련 기능
+function viewMyProfile() {
+  if (!currentUser) {
+    showNotification('로그인 필요', '로그인이 필요합니다.', 'error');
+    return;
+  }
+
+  document.getElementById('profileNickname').textContent = currentUser.nickname;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+
+  const largeAvatar = document.getElementById('profileLargeAvatar');
+  if (currentUser.photoURL) {
+    largeAvatar.innerHTML = `<img src="${currentUser.photoURL}" alt="프로필" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+  } else {
+    largeAvatar.textContent = currentUser.nickname.charAt(0);
+  }
+
+  document.getElementById('profileModal').classList.add('active');
+  closeDropdown();
+}
+
+function viewMyListings() {
+  if (!currentUser) {
+    showNotification('로그인 필요', '로그인이 필요합니다.', 'error');
+    return;
+  }
+
+  currentProducts = products.filter(p => p.sellerUID === currentUser.uid);
+  renderProducts(currentProducts);
+  closeDropdown();
+
+  const sectionTitle = document.querySelector('.section-title');
+  if (sectionTitle) sectionTitle.textContent = '내 판매 상품';
+
+  if (currentProducts.length === 0) {
+    showNotification('정보', '등록한 상품이 없습니다.', 'info');
+  } else {
+    showNotification('필터 적용', `${currentProducts.length}개의 상품을 찾았습니다.`);
+  }
+}
+
+function viewFavorites() {
+  if (favorites.size === 0) {
+    showNotification('알림', '찜한 상품이 없습니다.', 'info');
+    closeDropdown();
+    return;
+  }
+
+  currentProducts = products.filter(p => favorites.has(p.id));
+  renderProducts(currentProducts);
+  closeDropdown();
+
+  const sectionTitle = document.querySelector('.section-title');
+  if (sectionTitle) sectionTitle.textContent = '찜한 상품 목록';
+}
 
 // ===== Window 객체에 함수 할당 (필수) =====
 window.showLoginModal = showLoginModal;
