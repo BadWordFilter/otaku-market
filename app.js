@@ -65,6 +65,7 @@ function initializeAuth() {
 
 function updateHeaderForUser() {
   const headerActions = document.querySelector('.header-actions');
+  const themeBtn = `<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경">🌙</button>`;
   const communityBtnLabel = activeTab === 'community' ? '🛍️ 마켓으로' : '💬 커뮤니티';
   const communityBtnAction = activeTab === 'community' ? `switchTab('home')` : `switchTab('community')`;
   const communityBtnStyle = activeTab === 'community'
