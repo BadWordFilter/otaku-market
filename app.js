@@ -65,8 +65,13 @@ function initializeAuth() {
 
 function updateHeaderForUser() {
   const headerActions = document.querySelector('.header-actions');
-  const themeBtn = `<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경">🌙</button>`;
-  const communityBtn = `<button class="btn btn-secondary" onclick="switchTab('community')" id="headerCommunityBtn" style="background: rgba(99, 102, 241, 0.1); border-color: var(--primary); color: var(--primary-light);">💬 커뮤니티</button>`;
+  const communityBtnLabel = activeTab === 'community' ? '🛍️ 마켓으로' : '💬 커뮤니티';
+  const communityBtnAction = activeTab === 'community' ? `switchTab('home')` : `switchTab('community')`;
+  const communityBtnStyle = activeTab === 'community'
+    ? `background: var(--primary); border-color: var(--primary); color: white;`
+    : `background: rgba(99, 102, 241, 0.1); border-color: var(--primary); color: var(--primary-light);`;
+
+  const communityBtn = `<button class="btn btn-secondary" onclick="${communityBtnAction}" id="headerCommunityBtn" style="${communityBtnStyle}">${communityBtnLabel}</button>`;
 
   if (currentUser) {
     const avatarText = currentUser.photoURL
@@ -864,7 +869,10 @@ function switchTab(tab) {
   if (tab === 'community') {
     if (marketplaceSection) marketplaceSection.style.display = 'none';
     if (communitySection) communitySection.style.display = 'block';
+
     if (headerCommunityBtn) {
+      headerCommunityBtn.innerHTML = '🛍️ 마켓으로';
+      headerCommunityBtn.setAttribute('onclick', "switchTab('home')");
       headerCommunityBtn.style.background = 'var(--primary)';
       headerCommunityBtn.style.color = 'white';
     }
@@ -873,10 +881,14 @@ function switchTab(tab) {
   } else {
     if (marketplaceSection) marketplaceSection.style.display = 'block';
     if (communitySection) communitySection.style.display = 'none';
+
     if (headerCommunityBtn) {
+      headerCommunityBtn.innerHTML = '💬 커뮤니티';
+      headerCommunityBtn.setAttribute('onclick', "switchTab('community')");
       headerCommunityBtn.style.background = 'rgba(99, 102, 241, 0.1)';
       headerCommunityBtn.style.color = 'var(--primary-light)';
     }
+
     // '전체' 탭 활성화 (홈으로 돌아올 때)
     if (tab === 'home') {
       navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
