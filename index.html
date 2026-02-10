@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="오타쿠 마켓 - 게임, 애니 피규어, 굿즈 전문 중고 거래 플랫폼">
+  <title>오타쿠 마켓 | 게임·애니·피규어 전문 거래</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo" onclick="location.reload()">🎮 오타쿠 마켓</div>
+
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="게임, 피규어, 굿즈를 검색하세요..." id="searchInput">
+        <button class="search-btn" onclick="performSearch()">검색</button>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="showLoginModal()">로그인</button>
+        <button class="btn btn-primary" onclick="showSellModal()">판매하기</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-content">
+      <div class="nav-item active" data-category="all">전체</div>
+      <div class="nav-item" data-category="game">🎮 게임</div>
+      <div class="nav-item" data-category="figure">🗿 피규어</div>
+      <div class="nav-item" data-category="anime">📺 애니 굿즈</div>
+      <div class="nav-item" data-category="manga">📚 만화책</div>
+      <div class="nav-item" data-category="card">🃏 카드/TCG</div>
+      <div class="nav-item" data-category="plush">🧸 인형/플러시</div>
+      <div class="nav-item" data-category="merch">✨ 기타 굿즈</div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="hero-title">오타쿠를 위한<br>특별한 거래 공간</h1>
+      <p class="hero-subtitle">게임, 애니메이션, 피규어 등 덕후 아이템 전문 중고 거래 플랫폼</p>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value">12,847</div>
+          <div class="stat-label">등록 상품</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">8,432</div>
+          <div class="stat-label">활성 유저</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">24,119</div>
+          <div class="stat-label">거래 완료</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label class="filter-label">카테고리</label>
+          <select class="filter-select" id="categoryFilter">
+            <option value="all">전체 카테고리</option>
+            <option value="game">게임</option>
+            <option value="figure">피규어</option>
+            <option value="anime">애니 굿즈</option>
+            <option value="manga">만화책</option>
+            <option value="card">카드/TCG</option>
+            <option value="plush">인형/플러시</option>
+            <option value="merch">기타 굿즈</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">가격대</label>
+          <select class="filter-select" id="priceFilter">
+            <option value="all">전체 가격</option>
+            <option value="0-50000">5만원 이하</option>
+            <option value="50000-100000">5만원 ~ 10만원</option>
+            <option value="100000-200000">10만원 ~ 20만원</option>
+            <option value="200000-999999999">20만원 이상</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">상태</label>
+          <select class="filter-select" id="conditionFilter">
+            <option value="all">전체 상태</option>
+            <option value="new">미개봉 새상품</option>
+            <option value="like-new">거의 새것</option>
+            <option value="good">양호</option>
+            <option value="fair">사용감 있음</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">지역</label>
+          <select class="filter-select" id="regionFilter">
+            <option value="all">전국</option>
+            <option value="seoul">서울</option>
+            <option value="gyeonggi">경기</option>
+            <option value="incheon">인천</option>
+            <option value="busan">부산</option>
+            <option value="daegu">대구</option>
+            <option value="other">기타</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section>
+      <div class="section-header">
+        <h2 class="section-title">전체 상품</h2>
+        <select class="sort-select" id="sortSelect">
+          <option value="recent">최신순</option>
+          <option value="low-price">낮은 가격순</option>
+          <option value="high-price">높은 가격순</option>
+          <option value="popular">인기순</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- Products will be dynamically inserted here -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-title">오타쿠 마켓</div>
+        <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+          게임, 애니메이션, 피규어를 사랑하는<br>
+          모든 덕후들의 안전한 거래 공간
+        </p>
+      </div>
+
+      <div class="footer-section">
+        <div class="footer-title">서비스</div>
+        <a href="#" class="footer-link">이용방법</a>
+        <a href="#" class="footer-link">안전거래 가이드</a>
+        <a href="#" class="footer-link">수수료 안내</a>
+        <a href="#" class="footer-link">FAQ</a>
+      </div>
+
+      <div class="footer-section">
+        <div class="footer-title">정책</div>
+        <a href="#" class="footer-link">이용약관</a>
+        <a href="#" class="footer-link">개인정보처리방침</a>
+        <a href="#" class="footer-link">청소년보호정책</a>
+        <a href="#" class="footer-link">위치기반서비스</a>
+      </div>
+
+      <div class="footer-section">
+        <div class="footer-title">고객센터</div>
+        <a href="#" class="footer-link">공지사항</a>
+        <a href="#" class="footer-link">문의하기</a>
+        <a href="#" class="footer-link">신고하기</a>
+        <a href="#" class="footer-link">제휴문의</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 오타쿠 마켓. All rights reserved. Made with 💜 for otaku community
+    </div>
+  </footer>
+
+  <!-- Product Detail Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+
+      <div class="modal-images">
+        <img src="" alt="Product" class="modal-image-main" id="modalImage">
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-header">
+          <div class="modal-category" id="modalCategory"></div>
+          <h2 class="modal-title" id="modalTitle"></h2>
+        </div>
+
+        <div class="modal-price-section">
+          <div class="modal-price" id="modalPrice"></div>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">상품 정보</div>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+            <div style="background: var(--bg-elevated); padding: 12px; border-radius: var(--radius-md);">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">상태</div>
+              <div style="font-weight: 600;" id="modalCondition"></div>
+            </div>
+            <div style="background: var(--bg-elevated); padding: 12px; border-radius: var(--radius-md);">
+              <div style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 4px;">위치</div>
+              <div style="font-weight: 600;" id="modalLocation"></div>
+            </div>
+          </div>
+          <p class="modal-description" id="modalDescription"></p>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">판매자 정보</div>
+          <div class="seller-info">
+            <div class="seller-avatar" id="sellerAvatar"></div>
+            <div class="seller-details">
+              <div class="seller-name" id="sellerName"></div>
+              <div class="seller-stats" id="sellerStats"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-secondary btn-large">💬 채팅하기</button>
+          <button class="btn btn-primary btn-large">💰 구매하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content" style="max-width: 450px;">
+      <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+
+      <div class="modal-body">
+        <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 8px; text-align: center;">로그인
+        </h2>
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 32px;">오타쿠 마켓에 오신 것을 환영합니다!</p>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">이메일</label>
+            <input type="email" class="form-input" id="loginEmail" placeholder="example@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">비밀번호</label>
+            <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary"
+            style="width: 100%; margin-top: 24px; padding: 14px;">로그인</button>
+        </form>
+
+        <div style="display: flex; align-items: center; gap: 16px; margin: 24px 0;">
+          <div style="flex: 1; height: 1px; background: var(--glass-border);"></div>
+          <span style="color: var(--text-tertiary); font-size: 13px; font-weight: 500;">또는</span>
+          <div style="flex: 1; height: 1px; background: var(--glass-border);"></div>
+        </div>
+
+        <div class="social-login-buttons">
+          <button class="social-btn kakao-btn" onclick="handleSocialLogin('kakao')">
+            <span class="social-icon">💬</span>
+            <span>카카오로 시작하기</span>
+          </button>
+          <button class="social-btn naver-btn" onclick="handleSocialLogin('naver')">
+            <span class="social-icon">N</span>
+            <span>네이버로 시작하기</span>
+          </button>
+          <button class="social-btn google-btn" onclick="handleSocialLogin('google')">
+            <span class="social-icon">G</span>
+            <span>구글로 시작하기</span>
+          </button>
+        </div>
+
+        <div
+          style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
+          <span style="color: var(--text-secondary); font-size: 14px;">계정이 없으신가요?</span>
+          <button onclick="switchToSignup()"
+            style="background: none; border: none; color: var(--primary-light); font-weight: 600; cursor: pointer; margin-left: 8px; font-size: 14px;">회원가입</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div class="modal" id="signupModal">
+    <div class="modal-content" style="max-width: 450px;">
+      <button class="modal-close" onclick="closeModal('signupModal')">×</button>
+
+      <div class="modal-body">
+        <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 8px; text-align: center;">회원가입
+        </h2>
+        <p style="color: var(--text-secondary); text-align: center; margin-bottom: 32px;">오타쿠 마켓의 멤버가 되어보세요!</p>
+
+        <form id="signupForm" onsubmit="handleSignup(event)">
+          <div class="form-group">
+            <label class="form-label">닉네임</label>
+            <input type="text" class="form-input" id="signupNickname" placeholder="닉네임을 입력하세요" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">이메일</label>
+            <input type="email" class="form-input" id="signupEmail" placeholder="example@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">비밀번호</label>
+            <input type="password" class="form-input" id="signupPassword" placeholder="8자 이상 입력하세요" required
+              minlength="8">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">비밀번호 확인</label>
+            <input type="password" class="form-input" id="signupPasswordConfirm" placeholder="비밀번호를 다시 입력하세요" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">지역</label>
+            <select class="form-input" id="signupRegion" required>
+              <option value="">지역을 선택하세요</option>
+              <option value="seoul">서울</option>
+              <option value="gyeonggi">경기</option>
+              <option value="incheon">인천</option>
+              <option value="busan">부산</option>
+              <option value="daegu">대구</option>
+              <option value="other">기타</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary"
+            style="width: 100%; margin-top: 24px; padding: 14px;">회원가입</button>
+        </form>
+
+        <div
+          style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
+          <span style="color: var(--text-secondary); font-size: 14px;">이미 계정이 있으신가요?</span>
+          <button onclick="switchToLogin()"
+            style="background: none; border: none; color: var(--primary-light); font-weight: 600; cursor: pointer; margin-left: 8px; font-size: 14px;">로그인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sell Modal -->
+  <div class="modal" id="sellModal">
+    <div class="modal-content" style="max-width: 600px;">
+      <button class="modal-close" onclick="closeModal('sellModal')">×</button>
+
+      <div class="modal-body">
+        <h2 style="font-family: 'Poppins', sans-serif; font-size: 28px; margin-bottom: 8px;">상품 등록</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 32px;">당신의 소중한 아이템을 판매해보세요!</p>
+
+        <form id="sellForm" onsubmit="handleSellProduct(event)">
+          <div class="form-group">
+            <label class="form-label">상품명</label>
+            <input type="text" class="form-input" id="sellTitle" placeholder="예: 젤다의 전설 티어스 오브 더 킹덤" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">카테고리</label>
+            <select class="form-input" id="sellCategory" required>
+              <option value="">카테고리를 선택하세요</option>
+              <option value="game">🎮 게임</option>
+              <option value="figure">🗿 피규어</option>
+              <option value="anime">📺 애니 굿즈</option>
+              <option value="manga">📚 만화책</option>
+              <option value="card">🃏 카드/TCG</option>
+              <option value="plush">🧸 인형/플러시</option>
+              <option value="merch">✨ 기타 굿즈</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">가격 (원)</label>
+            <input type="number" class="form-input" id="sellPrice" placeholder="0" required min="0" step="1000">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">상태</label>
+            <select class="form-input" id="sellCondition" required>
+              <option value="">상태를 선택하세요</option>
+              <option value="new">미개봉 새상품</option>
+              <option value="like-new">거의 새것</option>
+              <option value="good">양호</option>
+              <option value="fair">사용감 있음</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">상품 설명</label>
+            <textarea class="form-input" id="sellDescription" placeholder="상품에 대해 자세히 설명해주세요..." rows="4"
+              required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary"
+            style="width: 100%; margin-top: 24px; padding: 14px;">등록하기</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>
