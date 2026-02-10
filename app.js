@@ -417,6 +417,92 @@ async function handleDeleteProduct(productId) {
   }
 }
 
+function showEditModal(productId) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return;
+
+  document.getElementById('editProductId').value = product.id;
+  document.getElementById('editTitle').value = product.title;
+  document.getElementById('editCategory').value = product.category;
+  document.getElementById('editPrice').value = product.price;
+  document.getElementById('editCondition').value = product.condition;
+  document.getElementById('editDescription').value = product.description;
+  document.getElementById('editRegion').value = product.region || 'seoul';
+
+  closeModal('productModal');
+  document.getElementById('editModal').classList.add('active');
+}
+
+async function handleEditProduct(event) {
+  event.preventDefault();
+
+  const productId = document.getElementById('editProductId').value;
+  const title = document.getElementById('editTitle').value;
+  const category = document.getElementById('editCategory').value;
+  const price = parseInt(document.getElementById('editPrice').value);
+  const condition = document.getElementById('editCondition').value;
+  const description = document.getElementById('editDescription').value;
+  const region = document.getElementById('editRegion').value;
+
+  const categoryNames = {
+    game: '게임',
+    figure: '피규어',
+    anime: '애니 굿즈',
+    manga: '만화책',
+    card: '카드/TCG',
+    plush: '인형/플러시',
+    merch: '기타 굿즈'
+  };
+
+  const conditionNames = {
+    'new': '미개봉 새상품',
+    'like-new': '거의 새것',
+    'good': '양호',
+    'fair': '사용감 있음'
+  };
+
+  const regionNames = {
+    seoul: '서울',
+    gyeonggi: '경기',
+    incheon: '인천',
+    busan: '부산',
+    daegu: '대구',
+    gwangju: '광주',
+    daejeon: '대전',
+    ulsan: '울산',
+    sejong: '세종',
+    gangwon: '강원',
+    chungbuk: '충북',
+    chungnam: '충남',
+    jeonbuk: '전북',
+    jeonnam: '전남',
+    gyeongbuk: '경북',
+    gyeongnam: '경남',
+    jeju: '제주'
+  };
+
+  try {
+    await updateDoc(doc(db, 'products', productId), {
+      title,
+      category,
+      categoryName: categoryNames[category],
+      price,
+      condition,
+      conditionName: conditionNames[condition],
+      location: regionNames[region] || '서울',
+      region: region || 'seoul',
+      description,
+      updatedAt: new Date()
+    });
+
+    closeModal('editModal');
+    showNotification('수정 완료', '상품 정보가 수정되었습니다.');
+  } catch (error) {
+    console.error('상품 수정 오류:', error);
+    showNotification('수정 실패', '상품 수정 중 오류가 발생했습니다.', 'error');
+  }
+}
+
 // ===== 렌더링 및 UI 함수들 =====
 
 function renderProducts(productsToRender) {
@@ -607,13 +693,18 @@ function showProductDetail(productId) {
 
   if (currentUser && (currentUser.uid === product.sellerUID || currentUser.email === product.sellerEmail)) {
     modalActions.innerHTML = `
-      <button class="btn btn-secondary btn-large" style="background-color: #ef4444; color: white; border: none; flex: 1;" onclick="handleDeleteProduct('${product.id}')">🗑️ 상품 삭제하기</button>
-      <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="closeModal('productModal')">닫기</button>
+      <div style="display: flex; gap: 8px; width: 100%;">
+        <button class="btn btn-secondary btn-large" style="background-color: #ef4444; color: white; border: none; flex: 1;" onclick="handleDeleteProduct('${product.id}')">🗑️ 삭제</button>
+        <button class="btn btn-primary btn-large" style="flex: 1;" onclick="showEditModal('${product.id}')">✏️ 수정</button>
+        <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="closeModal('productModal')">닫기</button>
+      </div>
     `;
   } else {
     modalActions.innerHTML = `
-      <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="showNotification('준비 중', '채팅 기능은 준비 중입니다.', 'info')">💬 채팅하기</button>
-      <button class="btn btn-primary btn-large" style="flex: 1;" onclick="showNotification('준비 중', '결제 기능은 준비 중입니다.', 'info')">💰 구매하기</button>
+      <div style="display: flex; gap: 8px; width: 100%;">
+        <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="showNotification('준비 중', '채팅 기능은 준비 중입니다.', 'info')">💬 채팅하기</button>
+        <button class="btn btn-primary btn-large" style="flex: 1;" onclick="showNotification('준비 중', '결제 기능은 준비 중입니다.', 'info')">💰 구매하기</button>
+      </div>
     `;
   }
 
@@ -821,6 +912,8 @@ window.handleLogout = handleLogout;
 window.handleSocialLogin = handleSocialLogin;
 window.handleSellProduct = handleSellProduct;
 window.handleDeleteProduct = handleDeleteProduct;
+window.showEditModal = showEditModal;
+window.handleEditProduct = handleEditProduct;
 window.showProductDetail = showProductDetail;
 window.toggleFavorite = toggleFavorite;
 window.performSearch = performSearch;
