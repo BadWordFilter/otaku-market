@@ -89,9 +89,14 @@
           </div>
         </div>
 
-        <button class="btn btn-primary intro-start-btn" onclick="switchTab('home')">
-          마켓 입장하기 🚀
+        <button class="btn btn-primary intro-start-btn" onclick="scrollToMarket()">
+          마켓 둘러보기 �️
         </button>
+      </div>
+
+      <div class="scroll-hint" onclick="scrollToMarket()">
+        <div class="mouse"></div>
+        <span>스크롤하여 입장하기</span>
       </div>
     </section>
 
@@ -107,7 +112,7 @@
     </section>
 
     <!-- Marketplace Section -->
-    <div id="marketplaceSection" style="display: none;">
+    <div id="marketplaceSection">
       <!-- Mobile Page Banner (Mobile Only) -->
       <div class="mobile-page-banner" id="mobilePageBanner">
         <div class="banner-content">

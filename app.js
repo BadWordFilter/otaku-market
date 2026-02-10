@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   updateThemeIcon();
 
-  // 처음 접속 시 인트로 섹션 보여주기
-  switchTab('intro');
+  // Home 탭으로 시작 (Intro + Market 포함)
+  switchTab('home');
 
   console.log('🚀 오타쿠 마켓 초기화 완료');
 });
@@ -820,6 +820,26 @@ function setupEventListeners() {
   // 가격 입력 시 실시간 필터
   document.getElementById('minPrice').addEventListener('input', applyFilters);
   document.getElementById('maxPrice').addEventListener('input', applyFilters);
+
+  // 스크롤 이벤트 감동 - 헤더 노출 제어
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('.header');
+    const nav = document.querySelector('.nav');
+    const intro = document.getElementById('introSection');
+
+    if (activeTab === 'home' && intro && intro.style.display !== 'none') {
+      const scrollPos = window.scrollY;
+      const introHeight = intro.offsetHeight;
+
+      if (scrollPos > introHeight * 0.5) {
+        if (header) header.style.transform = 'translateY(0)';
+        if (nav) nav.style.transform = 'translateY(0)';
+      } else {
+        if (header) header.style.transform = 'translateY(-100%)';
+        if (nav) nav.style.transform = 'translateY(-100%)';
+      }
+    }
+  });
 }
 
 function resetFilters() {
@@ -960,8 +980,16 @@ function removeImage(previewId) {
   document.getElementById(inputId).value = '';
 }
 
+function scrollToMarket() {
+  const marketplace = document.getElementById('marketplaceSection');
+  if (marketplace) {
+    marketplace.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
 window.handleImagePreview = handleImagePreview;
 window.removeImage = removeImage;
+window.scrollToMarket = scrollToMarket;
 
 function switchTab(tab) {
   activeTab = tab;
@@ -979,27 +1007,19 @@ function switchTab(tab) {
     item.classList.toggle('active', item.getAttribute('data-tab') === tab);
   });
 
-  if (tab === 'intro') {
-    if (introSection) introSection.style.display = 'flex';
-    if (marketplaceSection) marketplaceSection.style.display = 'none';
-    if (communitySection) communitySection.style.display = 'none';
-    if (header) header.style.display = 'none';
-    if (nav) nav.style.display = 'none';
-    const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
-    if (mobileBottomNav) mobileBottomNav.style.display = 'none';
-    return;
-  }
-
-  // 홈이나 커뮤니티 진입 시 헤더/내비 다시 보여주기
-  if (header) header.style.display = 'block';
-  if (nav) nav.style.display = 'block';
-  if (introSection) introSection.style.display = 'none';
-  const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
-  if (mobileBottomNav && window.innerWidth <= 768) mobileBottomNav.style.display = 'flex';
-
   if (tab === 'community') {
+    if (introSection) introSection.style.display = 'none';
     if (marketplaceSection) marketplaceSection.style.display = 'none';
     if (communitySection) communitySection.style.display = 'block';
+
+    if (header) {
+      header.style.display = 'block';
+      header.style.transform = 'translateY(0)';
+    }
+    if (nav) {
+      nav.style.display = 'block';
+      nav.style.transform = 'translateY(0)';
+    }
 
     if (headerCommunityBtn) {
       headerCommunityBtn.innerHTML = '🛍️ 마켓으로';
@@ -1009,21 +1029,31 @@ function switchTab(tab) {
     renderCommunity();
     updateMobileBanner('community');
     window.scrollTo(0, 0);
-  } else {
+  } else if (tab === 'home') {
+    if (introSection) introSection.style.display = 'flex';
     if (marketplaceSection) marketplaceSection.style.display = 'block';
     if (communitySection) communitySection.style.display = 'none';
+
+    // 홈에서는 인트로를 지나야 헤더가 보이도록 초기 설정
+    if (header) {
+      header.style.display = 'block';
+      header.style.transition = 'transform 0.4s ease';
+      header.style.transform = 'translateY(-100%)';
+    }
+    if (nav) {
+      nav.style.display = 'block';
+      nav.style.transition = 'transform 0.4s ease';
+      nav.style.transform = 'translateY(-100%)';
+    }
 
     if (headerCommunityBtn) {
       headerCommunityBtn.innerHTML = '💬 커뮤니티';
       headerCommunityBtn.setAttribute('onclick', "switchTab('community')");
     }
 
-    // '전체' 탭 활성화 (홈으로 돌아올 때)
-    if (tab === 'home') {
-      navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
-      updateMobileBanner('home');
-    }
+    navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
     renderProducts(currentProducts);
+    updateMobileBanner('home');
     window.scrollTo(0, 0);
   }
 }
