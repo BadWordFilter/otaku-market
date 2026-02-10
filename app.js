@@ -234,15 +234,18 @@ async function handleSellProduct(event) {
   const condition = document.getElementById('sellCondition').value;
   const description = document.getElementById('sellDescription').value;
   const region = document.getElementById('sellRegion').value;
+  const tradeMethod = document.getElementById('sellTradeMethod').value;
 
   const categoryNames = { game: '게임', figure: '피규어', anime: '애니 굿즈', manga: '만화책', card: '카드/TCG', plush: '인형/플러시', merch: '기타 굿즈' };
   const conditionNames = { 'new': '미개봉 새상품', 'like-new': '거의 새것', 'good': '양호', 'fair': '사용감 있음' };
+  const tradeMethodNames = { direct: '🤝 직거래', shipping: '📦 택배거래', both: '🔄 직거래/택배 모두 가능' };
   const regionNames = { seoul: '서울', gyeonggi: '경기', incheon: '인천', busan: '부산', daegu: '대구', gwangju: '광주', daejeon: '대전', ulsan: '울산', sejong: '세종', gangwon: '강원', chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남', gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주' };
 
   try {
     await addDoc(collection(db, 'products'), {
       title, category, categoryName: categoryNames[category],
       price, condition, conditionName: conditionNames[condition],
+      tradeMethod, tradeMethodName: tradeMethodNames[tradeMethod],
       location: regionNames[region] || '서울', region: region || 'seoul',
       image: 'placeholder.jpg',
       seller: currentUser.nickname, sellerEmail: currentUser.email, sellerUID: currentUser.uid,
@@ -279,6 +282,7 @@ function showEditModal(productId) {
   document.getElementById('editCategory').value = product.category;
   document.getElementById('editPrice').value = product.price;
   document.getElementById('editCondition').value = product.condition;
+  document.getElementById('editTradeMethod').value = product.tradeMethod || '';
   document.getElementById('editDescription').value = product.description;
   document.getElementById('editRegion').value = product.region || 'seoul';
 
@@ -297,15 +301,18 @@ async function handleEditProduct(event) {
   const condition = document.getElementById('editCondition').value;
   const description = document.getElementById('editDescription').value;
   const region = document.getElementById('editRegion').value;
+  const tradeMethod = document.getElementById('editTradeMethod').value;
 
   const categoryNames = { game: '게임', figure: '피규어', anime: '애니 굿즈', manga: '만화책', card: '카드/TCG', plush: '인형/플러시', merch: '기타 굿즈' };
   const conditionNames = { 'new': '미개봉 새상품', 'like-new': '거의 새것', 'good': '양호', 'fair': '사용감 있음' };
+  const tradeMethodNames = { direct: '🤝 직거래', shipping: '📦 택배거래', both: '🔄 직거래/택배 모두 가능' };
   const regionNames = { seoul: '서울', gyeonggi: '경기', incheon: '인천', busan: '부산', daegu: '대구', gwangju: '광주', daejeon: '대전', ulsan: '울산', sejong: '세종', gangwon: '강원', chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남', gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주' };
 
   try {
     await updateDoc(doc(db, 'products', productId), {
       title, category, categoryName: categoryNames[category],
       price, condition, conditionName: conditionNames[condition],
+      tradeMethod, tradeMethodName: tradeMethodNames[tradeMethod],
       location: regionNames[region] || '서울', region: region || 'seoul',
       description, updatedAt: new Date()
     });
@@ -458,6 +465,7 @@ function showProductDetail(productId) {
   document.getElementById('modalPrice').textContent = formatPrice(product.price) + '원';
   document.getElementById('modalCondition').textContent = product.conditionName;
   document.getElementById('modalLocation').textContent = product.location || '서울';
+  document.getElementById('modalTradeMethod').textContent = product.tradeMethodName || '미지정';
   document.getElementById('modalDescription').textContent = product.description;
 
   // 판매자 정보 업데이트
