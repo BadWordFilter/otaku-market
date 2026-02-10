@@ -17,7 +17,8 @@ import {
   doc,
   where,
   deleteDoc,
-  updateProfile
+  updateProfile,
+  writeBatch
 } from "./firebase-config.js";
 
 // ===== 전역 변수 =====
@@ -935,16 +936,42 @@ async function handleUpdateProfile(event) {
       });
     }
 
-    // 3. 현재 로컬 상태 업데이트
+    // 3. 작성한 상품들 닉네임 동기화
+    const productsRef = collection(db, 'products');
+    const pq = query(productsRef, where('sellerUID', '==', currentUser.uid));
+    const productsSnapshot = await getDocs(pq);
+
+    if (!productsSnapshot.empty) {
+      const batch = writeBatch(db);
+      productsSnapshot.forEach((docSnap) => {
+        batch.update(doc(db, 'products', docSnap.id), { seller: newNickname });
+      });
+      await batch.commit();
+    }
+
+    // 4. 작성한 커뮤니티 게시글 닉네임 동기화
+    const postsRef = collection(db, 'communityPosts');
+    const postQ = query(postsRef, where('authorUID', '==', currentUser.uid));
+    const postsSnapshot = await getDocs(postQ);
+
+    if (!postsSnapshot.empty) {
+      const batch = writeBatch(db);
+      postsSnapshot.forEach((docSnap) => {
+        batch.update(doc(db, 'communityPosts', docSnap.id), { author: newNickname });
+      });
+      await batch.commit();
+    }
+
+    // 5. 현재 로컬 상태 업데이트
     currentUser.nickname = newNickname;
     currentUser.photoURL = newPhotoURL;
 
     closeModal('editProfileModal');
     updateHeaderForUser();
-    showNotification('성공', '프로필이 업데이트되었습니다.');
+    showNotification('성공', '프로필과 작성 글들이 업데이트되었습니다.');
   } catch (error) {
     console.error('프로필 업데이트 오류:', error);
-    showNotification('실패', '프로필 업데이트 중 오류가 발생했습니다.', 'error');
+    showNotification('실패', '업데이트 중 오류가 발생했습니다.', 'error');
   }
 }
 
