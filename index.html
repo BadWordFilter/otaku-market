@@ -347,6 +347,19 @@
 
         <form id="sellForm" onsubmit="handleSellProduct(event)">
           <div class="form-group">
+            <label class="form-label">상품 사진</label>
+            <div class="image-upload-container">
+              <label for="sellImageInput" class="image-upload-label">
+                <div class="upload-icon">📸</div>
+                <span>사진 추가</span>
+                <input type="file" id="sellImageInput" accept="image/*"
+                  onchange="handleImagePreview(this, 'sellPreview')" hidden>
+              </label>
+              <div id="sellPreview" class="image-preview-wrapper"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">상품명</label>
             <input type="text" class="form-input" id="sellTitle" placeholder="예: 젤다의 전설 티어스 오브 더 킹덤" required>
           </div>
@@ -439,6 +452,20 @@
 
         <form id="editForm" onsubmit="handleEditProduct(event)">
           <input type="hidden" id="editProductId">
+
+          <div class="form-group">
+            <label class="form-label">상품 사진</label>
+            <div class="image-upload-container">
+              <label for="editImageInput" class="image-upload-label">
+                <div class="upload-icon">📸</div>
+                <span>사진 변경</span>
+                <input type="file" id="editImageInput" accept="image/*"
+                  onchange="handleImagePreview(this, 'editPreview')" hidden>
+              </label>
+              <div id="editPreview" class="image-preview-wrapper"></div>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">상품명</label>
             <input type="text" class="form-input" id="editTitle" required>

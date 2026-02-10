@@ -255,18 +255,23 @@ async function handleSellProduct(event) {
   const tradeMethodNames = { direct: '🤝 직거래', shipping: '📦 택배거래', both: '🔄 직거래/택배 모두 가능' };
   const regionNames = { seoul: '서울', gyeonggi: '경기', incheon: '인천', busan: '부산', daegu: '대구', gwangju: '광주', daejeon: '대전', ulsan: '울산', sejong: '세종', gangwon: '강원', chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남', gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주' };
 
+  const previewContainer = document.getElementById('sellPreview');
+  const uploadedImg = previewContainer.querySelector('img');
+  const image = uploadedImg ? uploadedImg.src : 'placeholder.jpg';
+
   try {
     await addDoc(collection(db, 'products'), {
       title, category, categoryName: categoryNames[category],
       price, condition, conditionName: conditionNames[condition],
       tradeMethod, tradeMethodName: tradeMethodNames[tradeMethod],
       location: regionNames[region] || '서울', region: region || 'seoul',
-      image: 'placeholder.jpg',
+      image,
       seller: currentUser.nickname, sellerEmail: currentUser.email, sellerUID: currentUser.uid,
       description, badge: 'new', views: 0, likes: 0, createdAt: new Date()
     });
     closeModal('sellModal');
     document.getElementById('sellForm').reset();
+    previewContainer.innerHTML = '';
     showNotification('등록 완료', '상품이 등록되었습니다.');
   } catch (error) {
     console.error('상품 등록 오류:', error);
@@ -416,6 +421,16 @@ function showEditModal(productId) {
   document.getElementById('editRegion').value = product.region || 'seoul';
 
   closeModal('productModal');
+
+  // Show current image in preview
+  const editPreview = document.getElementById('editPreview');
+  editPreview.innerHTML = `
+    <div class="preview-item">
+      <img src="${product.image}" alt="current">
+      <button type="button" class="remove-img-btn" onclick="this.parentElement.remove()">×</button>
+    </div>
+  `;
+
   document.getElementById('editModal').classList.add('active');
 }
 
@@ -437,12 +452,17 @@ async function handleEditProduct(event) {
   const tradeMethodNames = { direct: '🤝 직거래', shipping: '📦 택배거래', both: '🔄 직거래/택배 모두 가능' };
   const regionNames = { seoul: '서울', gyeonggi: '경기', incheon: '인천', busan: '부산', daegu: '대구', gwangju: '광주', daejeon: '대전', ulsan: '울산', sejong: '세종', gangwon: '강원', chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남', gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주' };
 
+  const previewContainer = document.getElementById('editPreview');
+  const uploadedImg = previewContainer.querySelector('img');
+  const image = uploadedImg ? uploadedImg.src : 'placeholder.jpg';
+
   try {
     await updateDoc(doc(db, 'products', productId), {
       title, category, categoryName: categoryNames[category],
       price, condition, conditionName: conditionNames[condition],
       tradeMethod, tradeMethodName: tradeMethodNames[tradeMethod],
       location: regionNames[region] || '서울', region: region || 'seoul',
+      image,
       description, updatedAt: new Date()
     });
     closeModal('editModal');
@@ -879,6 +899,36 @@ function viewFavorites() {
   if (sectionTitle) sectionTitle.textContent = '찜한 상품 목록';
   updateMobileBanner('favorites');
 }
+
+// 이미지 프리뷰 처리
+function handleImagePreview(input, previewId) {
+  const container = document.getElementById(previewId);
+  container.innerHTML = '';
+
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      container.innerHTML = `
+        <div class="preview-item">
+          <img src="${e.target.result}" alt="preview">
+          <button type="button" class="remove-img-btn" onclick="removeImage('${previewId}')">×</button>
+        </div>
+      `;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function removeImage(previewId) {
+  const container = document.getElementById(previewId);
+  container.innerHTML = '';
+  // 인풋도 초기화
+  const inputId = previewId.includes('sell') ? 'sellImageInput' : 'editImageInput';
+  document.getElementById(inputId).value = '';
+}
+
+window.handleImagePreview = handleImagePreview;
+window.removeImage = removeImage;
 
 function switchTab(tab) {
   activeTab = tab;
