@@ -69,8 +69,8 @@ function initializeAuth() {
 
 function updateHeaderForUser() {
   const headerActions = document.querySelector('.header-actions');
-  const themeBtn = `<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경"></button>`;
-  const communityBtnLabel = activeTab === 'community' ? '마켓으로' : '커뮤니티';
+  const themeBtn = `<button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경">🌙</button>`;
+  const communityBtnLabel = activeTab === 'community' ? '🛍️ 마켓으로' : '💬 커뮤니티';
   const communityBtnAction = activeTab === 'community' ? `switchTab('home')` : `switchTab('community')`;
 
   const communityBtn = `<button class="btn btn-secondary" onclick="${communityBtnAction}" id="headerCommunityBtn">${communityBtnLabel}</button>`;
@@ -92,17 +92,17 @@ function updateHeaderForUser() {
         </div>
         <div class="dropdown-menu" id="userDropdown">
           <div class="dropdown-item" onclick="event.stopPropagation(); viewMyProfile()">
-             내 프로필
+            <span>👤</span> 내 프로필
           </div>
           <div class="dropdown-item" onclick="event.stopPropagation(); viewMyListings()">
-             내 판매 상품
+            <span>📦</span> 내 판매 상품
           </div>
           <div class="dropdown-item" onclick="event.stopPropagation(); viewFavorites()">
-             찜한 상품
+            <span>❤️</span> 찜한 상품
           </div>
           <div class="dropdown-divider"></div>
           <div class="dropdown-item" onclick="event.stopPropagation(); window.handleLogout()">
-             로그아웃
+            <span>🚪</span> 로그아웃
           </div>
         </div>
       </div>
@@ -253,7 +253,7 @@ async function handleSellProduct(event) {
 
   const categoryNames = { game: '게임', figure: '피규어', anime: '애니 굿즈', manga: '만화책', card: '카드/TCG', plush: '인형/플러시', merch: '기타 굿즈' };
   const conditionNames = { 'new': '미개봉 새상품', 'like-new': '거의 새것', 'good': '양호', 'fair': '사용감 있음' };
-  const tradeMethodNames = { direct: '직거래', shipping: '택배거래', both: '직거래/택배 모두 가능' };
+  const tradeMethodNames = { direct: '🤝 직거래', shipping: '📦 택배거래', both: '🔄 직거래/택배 모두 가능' };
   const regionNames = { seoul: '서울', gyeonggi: '경기', incheon: '인천', busan: '부산', daegu: '대구', gwangju: '광주', daejeon: '대전', ulsan: '울산', sejong: '세종', gangwon: '강원', chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남', gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주' };
 
   const previewContainer = document.getElementById('sellPreview');
@@ -372,6 +372,7 @@ function renderCommunity() {
   const grid = document.getElementById('communityGrid');
   if (communityPosts.length === 0) {
     grid.innerHTML = `<div style="text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+        <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
         <div style="font-size: 18px; font-weight: 600;">아직 게시글이 없습니다. 첫 글을 남겨보세요!</div>
       </div>`;
     return;
@@ -399,10 +400,10 @@ function renderCommunity() {
         <div class="community-content">${post.content}</div>
         <div class="community-footer">
           <div class="community-action ${isLiked ? 'liked' : ''}" onclick="togglePostLike('${post.id}')">
-            좋아요 ${post.likes || 0}
+            ${isLiked ? '❤️' : '🤍'} ${post.likes || 0}
           </div>
           <div class="community-action" onclick="showNotification('준비 중', '댓글 기능은 준비 중입니다.', 'info')">
-            댓글
+            💬 댓글
           </div>
         </div>
       </div>
@@ -453,7 +454,7 @@ async function handleEditProduct(event) {
 
   const categoryNames = { game: '게임', figure: '피규어', anime: '애니 굿즈', manga: '만화책', card: '카드/TCG', plush: '인형/플러시', merch: '기타 굿즈' };
   const conditionNames = { 'new': '미개봉 새상품', 'like-new': '거의 새것', 'good': '양호', 'fair': '사용감 있음' };
-  const tradeMethodNames = { direct: '직거래', shipping: '택배거래', both: '직거래/택배 모두 가능' };
+  const tradeMethodNames = { direct: '🤝 직거래', shipping: '📦 택배거래', both: '🔄 직거래/택배 모두 가능' };
   const regionNames = { seoul: '서울', gyeonggi: '경기', incheon: '인천', busan: '부산', daegu: '대구', gwangju: '광주', daejeon: '대전', ulsan: '울산', sejong: '세종', gangwon: '강원', chungbuk: '충북', chungnam: '충남', jeonbuk: '전북', jeonnam: '전남', gyeongbuk: '경북', gyeongnam: '경남', jeju: '제주' };
 
   const previewContainer = document.getElementById('editPreview');
@@ -517,7 +518,7 @@ function showNotification(title, message, type = 'success') {
   notification.className = `notification ${type}`;
   notification.style.cursor = 'pointer'; // 클릭 가능함을 시각적으로 알림
   notification.innerHTML = `
-    <div class="notification-icon"></div>
+    <div class="notification-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</div>
     <div class="notification-content"><div class="notification-title">${title}</div><div class="notification-message">${message}</div></div>
   `;
 
@@ -550,14 +551,15 @@ function updateThemeIcon() {
   const toggleBtns = document.querySelectorAll('.theme-toggle');
   const currentTheme = localStorage.getItem('theme') || 'dark';
   toggleBtns.forEach(btn => {
-    btn.textContent = '';
+    btn.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
   });
 }
 
 // 기타 유틸리티
 function formatPrice(price) { return price.toLocaleString('ko-KR'); }
 function getCategoryEmoji(category) {
-  return '';
+  const emojis = { game: '🎮', figure: '🗿', anime: '📺', manga: '📚', card: '🃏', plush: '🧸', merch: '✨' };
+  return emojis[category] || '🎯';
 }
 function getColorForCategory(category) {
   const colors = { game: '8B5CF6', figure: '3B82F6', anime: 'EC4899', manga: '10B981', card: 'F59E0B', plush: 'EF4444', merch: '6366F1' };
@@ -589,6 +591,7 @@ function renderProducts(productsToRender) {
   const grid = document.getElementById('productGrid');
   if (!productsToRender || productsToRender.length === 0) {
     grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-secondary);">
+        <div style="font-size: 48px; margin-bottom: 16px;">😢</div>
         <div style="font-size: 18px; font-weight: 600;">상품이 없습니다</div>
       </div>`;
     return;
@@ -599,7 +602,7 @@ function renderProducts(productsToRender) {
         <img src="${product.image}" alt="${product.title}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22%3E%3Crect width=%22400%22 height=%22400%22 fill=%22%23${getColorForCategory(product.category)}%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-size=%2248%22 fill=%22white%22%3E${getCategoryEmoji(product.category)}%3C/text%3E%3C/svg%3E'">
         ${product.badge ? `<div class="product-badge badge-${product.badge}">${product.badge === 'new' ? 'NEW' : 'HOT'}</div>` : ''}
         <div class="product-favorite ${favorites.has(product.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleFavorite('${product.id}')">
-          찜
+          ${favorites.has(product.id) ? '❤️' : '🤍'}
         </div>
       </div>
       <div class="product-info">
@@ -608,8 +611,8 @@ function renderProducts(productsToRender) {
         <div class="product-condition">${product.conditionName}</div>
         <div class="product-price">${formatPrice(product.price)} <span>원</span></div>
         <div class="product-footer">
-          <div class="product-location">${product.location || '서울'}</div>
-          <div class="product-meta">조회 ${product.views || 0} · 찜 ${product.likes || 0}</div>
+          <div class="product-location">📍 ${product.location || '서울'}</div>
+          <div class="product-meta">👁️ ${product.views || 0} · ❤️ ${product.likes || 0}</div>
         </div>
       </div>
       ${product.status === 'sold' ? '<div class="sold-overlay"><span>판매 완료</span></div>' : ''}
@@ -653,8 +656,8 @@ function showProductDetail(productId) {
       <div style="flex-direction: column; gap: 8px; width: 100%; display: flex;">
         <button class="btn btn-primary btn-large" style="background-color: ${statusBtnColor};" onclick="updateProductStatus('${product.id}', '${nextStatus}')">${statusBtnLabel}</button>
         <div style="display: flex; gap: 8px;">
-          <button class="btn btn-secondary btn-large" style="background-color: #ef4444; color: white; border: none; flex: 1;" onclick="handleDeleteProduct('${product.id}')">삭제</button>
-          <button class="btn btn-primary btn-large" style="flex: 1;" onclick="showEditModal('${product.id}')">수정</button>
+          <button class="btn btn-secondary btn-large" style="background-color: #ef4444; color: white; border: none; flex: 1;" onclick="handleDeleteProduct('${product.id}')">🗑️ 삭제</button>
+          <button class="btn btn-primary btn-large" style="flex: 1;" onclick="showEditModal('${product.id}')">✏️ 수정</button>
           <button class="btn btn-secondary btn-large" style="flex: 1;" onclick="closeModal('productModal')">닫기</button>
         </div>
       </div>
@@ -662,8 +665,8 @@ function showProductDetail(productId) {
   } else {
     modalActions.innerHTML = `
       <div style="display: flex; gap: 8px; width: 100%;">
-        <button class="btn btn-secondary btn-large" style="flex: 1;" ${product.status === 'sold' ? 'disabled' : ''} onclick="showNotification('준비 중', '채팅 기능은 준비 중입니다.', 'info')">채팅하기</button>
-        <button class="btn btn-primary btn-large" style="flex: 1;" ${product.status === 'sold' ? 'disabled' : ''} onclick="showNotification('준비 중', '결제 기능은 준비 중입니다.', 'info')">${product.status === 'sold' ? '품절' : '구매하기'}</button>
+        <button class="btn btn-secondary btn-large" style="flex: 1;" ${product.status === 'sold' ? 'disabled' : ''} onclick="showNotification('준비 중', '채팅 기능은 준비 중입니다.', 'info')">💬 채팅하기</button>
+        <button class="btn btn-primary btn-large" style="flex: 1;" ${product.status === 'sold' ? 'disabled' : ''} onclick="showNotification('준비 중', '결제 기능은 준비 중입니다.', 'info')">${product.status === 'sold' ? '품절' : '💰 구매하기'}</button>
       </div>
     `;
   }
@@ -1074,7 +1077,7 @@ function switchTab(tab) {
     if (communitySection) communitySection.style.display = 'block';
 
     if (headerCommunityBtn) {
-      headerCommunityBtn.innerHTML = '마켓으로';
+      headerCommunityBtn.innerHTML = '🛍️ 마켓으로';
       headerCommunityBtn.setAttribute('onclick', "switchTab('home')");
     }
     navItems.forEach(nav => nav.classList.remove('active'));
@@ -1086,7 +1089,7 @@ function switchTab(tab) {
     if (communitySection) communitySection.style.display = 'none';
 
     if (headerCommunityBtn) {
-      headerCommunityBtn.innerHTML = '커뮤니티';
+      headerCommunityBtn.innerHTML = '💬 커뮤니티';
       headerCommunityBtn.setAttribute('onclick', "switchTab('community')");
     }
 
@@ -1111,10 +1114,10 @@ function updateMobileBanner(view) {
   if (!banner) return;
 
   const views = {
-    home: { icon: '', title: '마켓 홈', desc: '새로운 굿즈를 찾아보세요', showHero: true, showFilters: true },
-    community: { icon: '', title: '커뮤니티', desc: '다른 덕후들과 소통하세요', showHero: false, showFilters: false },
-    listings: { icon: '', title: '내 판매 상품', desc: '등록한 상품들을 관리하세요', showHero: false, showFilters: false },
-    favorites: { icon: '', title: '찜한 상품', desc: '마음에 들었던 아이템들입니다', showHero: false, showFilters: false }
+    home: { icon: '🏠', title: '마켓 홈', desc: '새로운 굿즈를 찾아보세요', showHero: true, showFilters: true },
+    community: { icon: '💬', title: '커뮤니티', desc: '다른 덕후들과 소통하세요', showHero: false, showFilters: false },
+    listings: { icon: '📦', title: '내 판매 상품', desc: '등록한 상품들을 관리하세요', showHero: false, showFilters: false },
+    favorites: { icon: '❤️', title: '찜한 상품', desc: '마음에 들었던 아이템들입니다', showHero: false, showFilters: false }
   };
 
   const config = views[view] || views.home;
