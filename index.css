@@ -87,8 +87,11 @@
     justify-content: center;
     cursor: pointer;
     font-size: 20px;
+    padding: 0;
+    line-height: 1;
     margin-right: var(--spacing-sm);
     transition: var(--transition-normal);
+    outline: none;
 }
 
 .theme-toggle:hover {
