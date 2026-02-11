@@ -29,7 +29,7 @@
   <!-- Header -->
   <header class="header">
     <div class="header-content">
-      <div class="logo" onclick="location.reload()">🎮 오타쿠 마켓</div>
+      <div class="logo" onclick="location.reload()">오타쿠 마켓</div>
 
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="게임, 피규어, 굿즈를 검색하세요..." id="searchInput">
@@ -37,9 +37,9 @@
       </div>
 
       <div class="header-actions">
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경">🌙</button>
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="테마 변경"></button>
         <button class="btn btn-secondary" onclick="switchTab('community')" id="headerCommunityBtn"
-          style="background: rgba(99, 102, 241, 0.1); border-color: var(--primary); color: var(--primary-light);">💬
+          style="background: rgba(99, 102, 241, 0.1); border-color: var(--primary); color: var(--primary-light);">
           커뮤니티</button>
         <button class="btn btn-secondary" onclick="showLoginModal()">로그인</button>
         <button class="btn btn-primary" onclick="showSellModal()">판매하기</button>
@@ -51,13 +51,13 @@
   <nav class="nav">
     <div class="nav-content">
       <div class="nav-item active" data-category="all">전체</div>
-      <div class="nav-item" data-category="game">🎮 게임</div>
-      <div class="nav-item" data-category="figure">🗿 피규어</div>
-      <div class="nav-item" data-category="anime">📺 애니 굿즈</div>
-      <div class="nav-item" data-category="manga">📚 만화책</div>
-      <div class="nav-item" data-category="card">🃏 카드/TCG</div>
-      <div class="nav-item" data-category="plush">🧸 인형/플러시</div>
-      <div class="nav-item" data-category="merch">✨ 기타 굿즈</div>
+      <div class="nav-item" data-category="game">게임</div>
+      <div class="nav-item" data-category="figure">피규어</div>
+      <div class="nav-item" data-category="anime">애니 굿즈</div>
+      <div class="nav-item" data-category="manga">만화책</div>
+      <div class="nav-item" data-category="card">카드/TCG</div>
+      <div class="nav-item" data-category="plush">인형/플러시</div>
+      <div class="nav-item" data-category="merch">기타 굿즈</div>
     </div>
   </nav>
 
@@ -82,7 +82,7 @@
       <div class="mobile-page-banner" id="mobilePageBanner">
         <div class="banner-content">
           <div class="banner-info">
-            <div class="banner-icon" id="bannerIcon">🏠</div>
+            <div class="banner-icon" id="bannerIcon"></div>
             <div>
               <h2 class="banner-title" id="bannerTitle">마켓 홈</h2>
               <p class="banner-desc" id="bannerDesc">새로운 굿즈를 찾아보세요</p>
@@ -120,13 +120,13 @@
             <label class="filter-group-label">카테고리 (복수 선택)</label>
             <div class="multi-select-container" id="categoryChips">
               <div class="chip active" data-value="all">전체</div>
-              <div class="chip" data-value="game">🎮 게임</div>
-              <div class="chip" data-value="figure">🗿 피규어</div>
-              <div class="chip" data-value="anime">📺 애니 굿즈</div>
-              <div class="chip" data-value="manga">📚 만화책</div>
-              <div class="chip" data-value="card">🃏 카드/TCG</div>
-              <div class="chip" data-value="plush">🧸 인형/플러시</div>
-              <div class="chip" data-value="merch">✨ 기타 굿즈</div>
+              <div class="chip" data-value="game">게임</div>
+              <div class="chip" data-value="figure">피규어</div>
+              <div class="chip" data-value="anime">애니 굿즈</div>
+              <div class="chip" data-value="manga">만화책</div>
+              <div class="chip" data-value="card">카드/TCG</div>
+              <div class="chip" data-value="plush">인형/플러시</div>
+              <div class="chip" data-value="merch">기타 굿즈</div>
             </div>
           </div>
 
@@ -135,10 +135,10 @@
             <label class="filter-group-label">상품 상태 (복수 선택)</label>
             <div class="multi-select-container" id="conditionChips">
               <div class="chip active" data-value="all">전체</div>
-              <div class="chip" data-value="new">✨ 미개봉 새상품</div>
-              <div class="chip" data-value="like-new">👍 거의 새것</div>
-              <div class="chip" data-value="good">🙂 양호</div>
-              <div class="chip" data-value="fair">🛠 사용감 있음</div>
+              <div class="chip" data-value="new">미개봉 새상품</div>
+              <div class="chip" data-value="like-new">거의 새것</div>
+              <div class="chip" data-value="good">양호</div>
+              <div class="chip" data-value="fair">사용감 있음</div>
             </div>
           </div>
 
@@ -226,7 +226,7 @@
     </div>
 
     <div class="footer-bottom">
-      © 2026 오타쿠 마켓. All rights reserved. Made with 💜 for otaku community
+      © 2026 오타쿠 마켓. All rights reserved. Made with love for otaku community
     </div>
   </footer>
 
@@ -352,7 +352,7 @@
             <label class="form-label">상품 사진</label>
             <div class="image-upload-container">
               <label for="sellImageInput" class="image-upload-label">
-                <div class="upload-icon">📸</div>
+                <div class="upload-icon"></div>
                 <span>사진 추가</span>
                 <input type="file" id="sellImageInput" accept="image/*"
                   onchange="handleImagePreview(this, 'sellPreview')" hidden>
@@ -370,13 +370,13 @@
             <label class="form-label">카테고리</label>
             <select class="form-input" id="sellCategory" required>
               <option value="">카테고리를 선택하세요</option>
-              <option value="game">🎮 게임</option>
-              <option value="figure">🗿 피규어</option>
-              <option value="anime">📺 애니 굿즈</option>
-              <option value="manga">📚 만화책</option>
-              <option value="card">🃏 카드/TCG</option>
-              <option value="plush">🧸 인형/플러시</option>
-              <option value="merch">✨ 기타 굿즈</option>
+              <option value="game">게임</option>
+              <option value="figure">피규어</option>
+              <option value="anime">애니 굿즈</option>
+              <option value="manga">만화책</option>
+              <option value="card">카드/TCG</option>
+              <option value="plush">인형/플러시</option>
+              <option value="merch">기타 굿즈</option>
             </select>
           </div>
 
@@ -400,9 +400,9 @@
             <label class="form-label">거래 방법</label>
             <select class="form-input" id="sellTradeMethod" required>
               <option value="">거래 방법을 선택하세요</option>
-              <option value="direct">🤝 직거래</option>
-              <option value="shipping">📦 택배거래</option>
-              <option value="both">🔄 직거래/택배 모두 가능</option>
+              <option value="direct">직거래</option>
+              <option value="shipping">택배거래</option>
+              <option value="both">직거래/택배 모두 가능</option>
             </select>
           </div>
 
@@ -459,7 +459,7 @@
             <label class="form-label">상품 사진</label>
             <div class="image-upload-container">
               <label for="editImageInput" class="image-upload-label">
-                <div class="upload-icon">📸</div>
+                <div class="upload-icon"></div>
                 <span>사진 변경</span>
                 <input type="file" id="editImageInput" accept="image/*"
                   onchange="handleImagePreview(this, 'editPreview')" hidden>
@@ -477,13 +477,13 @@
             <label class="form-label">카테고리</label>
             <select class="form-input" id="editCategory" required>
               <option value="">카테고리를 선택하세요</option>
-              <option value="game">🎮 게임</option>
-              <option value="figure">🗿 피규어</option>
-              <option value="anime">📺 애니 굿즈</option>
-              <option value="manga">📚 만화책</option>
-              <option value="card">🃏 카드/TCG</option>
-              <option value="plush">🧸 인형/플러시</option>
-              <option value="merch">✨ 기타 굿즈</option>
+              <option value="game">게임</option>
+              <option value="figure">피규어</option>
+              <option value="anime">애니 굿즈</option>
+              <option value="manga">만화책</option>
+              <option value="card">카드/TCG</option>
+              <option value="plush">인형/플러시</option>
+              <option value="merch">기타 굿즈</option>
             </select>
           </div>
 
@@ -507,9 +507,9 @@
             <label class="form-label">거래 방법</label>
             <select class="form-input" id="editTradeMethod" required>
               <option value="">거래 방법을 선택하세요</option>
-              <option value="direct">🤝 직거래</option>
-              <option value="shipping">📦 택배거래</option>
-              <option value="both">🔄 직거래/택배 모두 가능</option>
+              <option value="direct">직거래</option>
+              <option value="shipping">택배거래</option>
+              <option value="both">직거래/택배 모두 가능</option>
             </select>
           </div>
 
@@ -606,10 +606,10 @@
             style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface-color); border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);">
             <div id="modalSellerAvatar"
               style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; font-size: 20px; color: white;">
-              👤</div>
+            </div>
             <div>
               <div id="modalSeller" style="font-weight: 600; font-size: 15px;">판매자</div>
-              <div style="font-size: 12px; color: var(--text-secondary);">매너온도 36.5°C 🔥</div>
+              <div style="font-size: 12px; color: var(--text-secondary);">매너온도 36.5°C</div>
             </div>
           </div>
         </div>
@@ -629,7 +629,7 @@
 
       <div
         style="width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #a855f7); margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white; box-shadow: var(--shadow-glow);"
-        id="profileLargeAvatar">👤</div>
+        id="profileLargeAvatar"></div>
 
       <h2 id="profileNickname" style="font-size: 28px; font-weight: 700; margin-bottom: 8px;">닉네임</h2>
       <p id="profileEmail" style="color: var(--text-secondary); margin-bottom: 32px;">email@example.com</p>
@@ -642,12 +642,12 @@
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span style="color: var(--text-secondary); font-size: 14px;">매너 온도</span>
-          <span style="font-weight: 600; color: #f59e0b;">36.5°C 🔥</span>
+          <span style="font-weight: 600; color: #f59e0b;">36.5°C</span>
         </div>
       </div>
 
       <button class="btn btn-secondary" style="width: 100%; padding: 14px; margin-bottom: 8px;"
-        onclick="showEditProfileModal()">🛠️ 프로필 수정</button>
+        onclick="showEditProfileModal()">프로필 수정</button>
       <button class="btn btn-secondary" style="width: 100%; padding: 14px; border: 1px solid var(--border-color);"
         onclick="closeModal('profileModal')">닫기</button>
     </div>
@@ -667,7 +667,7 @@
             <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
               <div id="profileEditPreview"
                 style="width: 100px; height: 100px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid var(--primary);">
-                👤
+
               </div>
               <input type="file" id="profileImageInput" accept="image/*" style="display: none;"
                 onchange="handleImagePreview(this, 'profileEditPreview')">
@@ -729,7 +729,7 @@
           <div style="display: flex; gap: 20px;">
             <div
               style="width: 48px; height: 48px; border-radius: 16px; background: rgba(99, 102, 241, 0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-              🔍</div>
+            </div>
             <div>
               <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">1. 상품 찾기</h3>
               <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">카테고리 필터와 검색 기능을 통해 원하는 한정판 굿즈나
@@ -740,7 +740,7 @@
           <div style="display: flex; gap: 20px;">
             <div
               style="width: 48px; height: 48px; border-radius: 16px; background: rgba(168, 85, 247, 0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-              ✍️</div>
+            </div>
             <div>
               <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">2. 상품 등록</h3>
               <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">'판매하기' 버튼을 눌러 소장 중인 아이템의 사진과
@@ -751,7 +751,7 @@
           <div style="display: flex; gap: 20px;">
             <div
               style="width: 48px; height: 48px; border-radius: 16px; background: rgba(236, 72, 153, 0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-              💬</div>
+            </div>
             <div>
               <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">3. 채팅 및 거래</h3>
               <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">마음에 드는 상품이 있다면 판매자와 채팅을 통해 상세
@@ -762,7 +762,7 @@
           <div style="display: flex; gap: 20px;">
             <div
               style="width: 48px; height: 48px; border-radius: 16px; background: rgba(34, 197, 94, 0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
-              🛡️</div>
+            </div>
             <div>
               <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">4. 매너 거래</h3>
               <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5;">상호 존중하는 매너 거래로 매너 온도를 높여 신뢰받는
@@ -780,11 +780,11 @@
   <!-- Mobile Bottom Navigation -->
   <nav class="mobile-bottom-nav">
     <div class="mobile-nav-item active" data-tab="home" onclick="switchTab('home')">
-      <div class="nav-icon">🏠</div>
+      <div class="nav-icon"></div>
       <div class="nav-label">홈</div>
     </div>
     <div class="mobile-nav-item" data-tab="community" onclick="switchTab('community')">
-      <div class="nav-icon">💬</div>
+      <div class="nav-icon"></div>
       <div class="nav-label">커뮤니티</div>
     </div>
     <div class="mobile-nav-item sell-btn-item" onclick="showSellModal()">
@@ -792,11 +792,11 @@
       <div class="nav-label">판매</div>
     </div>
     <div class="mobile-nav-item" data-tab="favorites" onclick="viewFavorites()">
-      <div class="nav-icon">❤️</div>
+      <div class="nav-icon"></div>
       <div class="nav-label">찜</div>
     </div>
     <div class="mobile-nav-item" data-tab="profile" onclick="viewMyProfile()">
-      <div class="nav-icon">👤</div>
+      <div class="nav-icon"></div>
       <div class="nav-label">MY</div>
     </div>
   </nav>
