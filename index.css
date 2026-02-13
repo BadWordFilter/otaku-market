@@ -703,12 +703,15 @@ body::before {
 }
 
 .product-favorite:hover {
-    background: var(--accent);
+    background: var(--bg-elevated);
+    border-color: var(--accent);
     transform: scale(1.1);
 }
 
 .product-favorite.active {
-    background: var(--accent);
+    background: var(--bg-elevated);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px hsla(340, 85%, 60%, 0.3);
 }
 
 .product-info {
