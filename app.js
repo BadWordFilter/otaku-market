@@ -842,16 +842,56 @@ function setupEventListeners() {
     });
   });
 
-  // 가격 입력 시 실시간 필터
-  document.getElementById('minPrice').addEventListener('input', applyFilters);
-  document.getElementById('maxPrice').addEventListener('input', applyFilters);
+  // 가격 슬라이더 연동
+  const minSlider = document.getElementById('minPriceSlider');
+  const maxSlider = document.getElementById('maxPriceSlider');
+  const minInput = document.getElementById('minPrice');
+  const maxInput = document.getElementById('maxPrice');
 
-  // 채팅 입력창 엔터키
-  const chatInput = document.getElementById('chatInput');
-  if (chatInput) {
-    chatInput.addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') sendMessage();
+  if (minSlider && maxSlider) {
+    const updateSliderTrack = () => {
+      const min = parseInt(minSlider.min);
+      const max = parseInt(minSlider.max);
+      const val1 = ((minSlider.value - min) / (max - min)) * 100;
+      const val2 = ((maxSlider.value - min) / (max - min)) * 100;
+      const track = document.getElementById('sliderTrack');
+      if (track) {
+        track.style.background = `linear-gradient(to right, var(--bg-tertiary) ${val1}%, var(--primary) ${val1}%, var(--primary) ${val2}%, var(--bg-tertiary) ${val2}%)`;
+      }
+    };
+
+    minSlider.addEventListener('input', () => {
+      if (parseInt(minSlider.value) > parseInt(maxSlider.value)) {
+        minSlider.value = maxSlider.value;
+      }
+      minInput.value = minSlider.value;
+      updateSliderTrack();
+      applyFilters();
     });
+
+    maxSlider.addEventListener('input', () => {
+      if (parseInt(maxSlider.value) < parseInt(minSlider.value)) {
+        maxSlider.value = minSlider.value;
+      }
+      maxInput.value = maxSlider.value;
+      updateSliderTrack();
+      applyFilters();
+    });
+
+    minInput.addEventListener('input', () => {
+      minSlider.value = minInput.value || 0;
+      updateSliderTrack();
+      applyFilters();
+    });
+
+    maxInput.addEventListener('input', () => {
+      maxSlider.value = maxInput.value || 1000000;
+      updateSliderTrack();
+      applyFilters();
+    });
+
+    // 초기 트랙 업데이트
+    updateSliderTrack();
   }
 }
 
@@ -864,6 +904,13 @@ function resetFilters() {
   document.getElementById('minPrice').value = '';
   document.getElementById('maxPrice').value = '';
   document.getElementById('searchInput').value = '';
+
+  const minSlider = document.getElementById('minPriceSlider');
+  const maxSlider = document.getElementById('maxPriceSlider');
+  if (minSlider) minSlider.value = 0;
+  if (maxSlider) maxSlider.value = 1000000;
+  const track = document.getElementById('sliderTrack');
+  if (track) track.style.background = `linear-gradient(to right, var(--bg-tertiary) 0%, var(--primary) 0%, var(--primary) 100%, var(--bg-tertiary) 100%)`;
 
   // 상단 내비게이션 초기화
   const navItems = document.querySelectorAll('.nav-item');

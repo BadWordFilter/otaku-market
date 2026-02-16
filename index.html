@@ -164,10 +164,16 @@
           <!-- Price Range Filter -->
           <div class="filter-group">
             <label class="filter-group-label">가격 범위 (원)</label>
+            <div class="range-slider-container">
+              <div class="slider-track" id="sliderTrack"></div>
+              <input type="range" class="min-range" id="minPriceSlider" min="0" max="1000000" value="0" step="1000">
+              <input type="range" class="max-range" id="maxPriceSlider" min="0" max="1000000" value="1000000"
+                step="1000">
+            </div>
             <div class="price-range-inputs">
-              <input type="number" class="price-input" id="minPrice" placeholder="최소 금액" min="0" step="1000">
+              <input type="number" class="price-input" id="minPrice" placeholder="0" min="0" step="1000">
               <span class="price-separator">~</span>
-              <input type="number" class="price-input" id="maxPrice" placeholder="최대 금액" min="0" step="1000">
+              <input type="number" class="price-input" id="maxPrice" placeholder="1000000" min="0" step="1000">
             </div>
             <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; padding: 10px;"
               onclick="resetFilters()">필터 초기화</button>
