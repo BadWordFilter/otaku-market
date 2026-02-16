@@ -544,6 +544,86 @@ body::before {
     margin-top: var(--spacing-xs);
 }
 
+/* Home Portal Section */
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-2xl);
+    perspective: 1000px;
+}
+
+.portal-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-2xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.portal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    opacity: 0.8;
+}
+
+.portal-card:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.portal-icon {
+    font-size: 64px;
+    margin-bottom: var(--spacing-lg);
+    transition: var(--transition-normal);
+}
+
+.portal-card:hover .portal-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.portal-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.portal-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.5;
+}
+
+.portal-btn {
+    font-weight: 600;
+    color: var(--primary-light);
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: var(--transition-fast);
+}
+
+.portal-card:hover .portal-btn {
+    letter-spacing: 2px;
+    color: var(--primary);
+}
+
 /* Filter Section */
 .filter-section {
     background: var(--glass-bg);

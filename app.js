@@ -1133,43 +1133,52 @@ window.removeImage = removeImage;
 
 function switchTab(tab) {
   activeTab = tab;
+  const homeSection = document.getElementById('homeSection');
   const marketplaceSection = document.getElementById('marketplaceSection');
   const communitySection = document.getElementById('communitySection');
   const headerCommunityBtn = document.getElementById('headerCommunityBtn');
   const navItems = document.querySelectorAll('.nav-item');
   const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
 
+  const nav = document.querySelector('.nav');
+
   // Update Mobile Bottom Nav Active State
   mobileNavItems.forEach(item => {
     item.classList.toggle('active', item.getAttribute('data-tab') === tab);
   });
 
-  if (tab === 'community') {
-    if (marketplaceSection) marketplaceSection.style.display = 'none';
-    if (communitySection) communitySection.style.display = 'block';
+  // Hide all sections initially
+  if (homeSection) homeSection.style.display = 'none';
+  if (marketplaceSection) marketplaceSection.style.display = 'none';
+  if (communitySection) communitySection.style.display = 'none';
+  if (nav) nav.style.display = 'none'; // Hide categories by default
 
-    if (headerCommunityBtn) {
-      headerCommunityBtn.innerHTML = '🛍️ 마켓으로';
-      headerCommunityBtn.setAttribute('onclick', "switchTab('home')");
-    }
-    navItems.forEach(nav => nav.classList.remove('active'));
-    renderCommunity();
-    updateMobileBanner('community');
-    window.scrollTo(0, 0);
-  } else {
-    if (marketplaceSection) marketplaceSection.style.display = 'block';
-    if (communitySection) communitySection.style.display = 'none';
-
+  if (tab === 'home') {
+    if (homeSection) homeSection.style.display = 'block';
     if (headerCommunityBtn) {
       headerCommunityBtn.innerHTML = '💬 커뮤니티';
       headerCommunityBtn.setAttribute('onclick', "switchTab('community')");
     }
-
-    // '전체' 탭 활성화 (홈으로 돌아올 때)
-    if (tab === 'home') {
-      navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
-      updateMobileBanner('home');
+    navItems.forEach(nav => nav.classList.remove('active'));
+    window.scrollTo(0, 0);
+  } else if (tab === 'community') {
+    if (communitySection) communitySection.style.display = 'block';
+    if (headerCommunityBtn) {
+      headerCommunityBtn.innerHTML = '🛍️ 마켓으로';
+      headerCommunityBtn.setAttribute('onclick', "switchTab('market')");
     }
+    navItems.forEach(nav => nav.classList.remove('active'));
+    renderCommunity();
+    window.scrollTo(0, 0);
+  } else if (tab === 'market') {
+    if (marketplaceSection) marketplaceSection.style.display = 'block';
+    if (nav) nav.style.display = 'block'; // Show categories on market
+    if (headerCommunityBtn) {
+      headerCommunityBtn.innerHTML = '💬 커뮤니티';
+      headerCommunityBtn.setAttribute('onclick', "switchTab('community')");
+    }
+    // '전체' 탭 활성화 (마켓으로 올 때)
+    navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
     renderProducts(currentProducts);
     window.scrollTo(0, 0);
   }

@@ -33,7 +33,7 @@
   <!-- Header -->
   <header class="header">
     <div class="header-content">
-      <div class="logo" onclick="location.reload()">🦆 덕질</div>
+      <div class="logo" onclick="switchTab('home')">🦆 덕질</div>
 
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="게임, 피규어, 굿즈를 검색하세요..." id="searchInput">
@@ -69,32 +69,8 @@
   <div class="container">
 
 
-    <!-- Community Section (Hidden by default) -->
-    <section id="communitySection" style="display: none; margin-top: 40px;">
-      <div class="section-header">
-        <h2 class="section-title">커뮤니티 피드</h2>
-        <button class="btn btn-primary" onclick="showCommunityWriteModal()">글쓰기</button>
-      </div>
-      <div id="communityGrid" class="community-grid">
-        <!-- Community posts will be dynamically inserted here -->
-      </div>
-    </section>
-
-    <!-- Marketplace Section -->
-    <div id="marketplaceSection">
-      <!-- Mobile Page Banner (Mobile Only) -->
-      <div class="mobile-page-banner" id="mobilePageBanner">
-        <div class="banner-content">
-          <div class="banner-info">
-            <div class="banner-icon" id="bannerIcon">🦆</div>
-            <div>
-              <h2 class="banner-title" id="bannerTitle">덕질 홈</h2>
-              <p class="banner-desc" id="bannerDesc">오늘도 즐거운 덕질 되세요!</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <!-- Home Dashboard Section -->
+    <section id="homeSection">
       <!-- Hero Section -->
       <section class="hero" id="heroSection">
         <div class="hero-mascot">🦆</div>
@@ -116,6 +92,40 @@
           </div>
         </div>
       </section>
+
+      <div class="portal-grid">
+        <div class="portal-card" onclick="switchTab('market')">
+          <div class="portal-icon">🛍️</div>
+          <div class="portal-content">
+            <h3 class="portal-title">덕질 마켓</h3>
+            <p class="portal-desc">소중한 굿즈를 안전하게 거래하세요</p>
+            <div class="portal-btn">마켓 구경하기 →</div>
+          </div>
+        </div>
+        <div class="portal-card" onclick="switchTab('community')">
+          <div class="portal-icon">💬</div>
+          <div class="portal-content">
+            <h3 class="portal-title">덕질 커뮤니티</h3>
+            <p class="portal-desc">덕후 친구들과 자유롭게 소통하세요</p>
+            <div class="portal-btn">커뮤니티 참여하기 →</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community Section (Hidden by default) -->
+    <section id="communitySection" style="display: none; margin-top: 20px;">
+      <div class="section-header">
+        <h2 class="section-title">커뮤니티 피드</h2>
+        <button class="btn btn-primary" onclick="showCommunityWriteModal()">글쓰기</button>
+      </div>
+      <div id="communityGrid" class="community-grid">
+        <!-- Community posts will be dynamically inserted here -->
+      </div>
+    </section>
+
+    <!-- Marketplace Section -->
+    <div id="marketplaceSection" style="display: none;">
 
       <!-- Filter Section -->
       <section class="filter-section">
