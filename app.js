@@ -1206,6 +1206,7 @@ function switchTab(tab) {
   const homeSection = document.getElementById('homeSection');
   const marketplaceSection = document.getElementById('marketplaceSection');
   const communitySection = document.getElementById('communitySection');
+  const chatSection = document.getElementById('chatSection');
   const headerCommunityBtn = document.getElementById('headerCommunityBtn');
   const navItems = document.querySelectorAll('.nav-item');
   const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
@@ -1221,6 +1222,7 @@ function switchTab(tab) {
   if (homeSection) homeSection.style.display = 'none';
   if (marketplaceSection) marketplaceSection.style.display = 'none';
   if (communitySection) communitySection.style.display = 'none';
+  if (chatSection) chatSection.style.display = 'none';
   if (nav) nav.style.display = 'none'; // Hide categories by default
 
   if (tab === 'home') {
@@ -1250,6 +1252,10 @@ function switchTab(tab) {
     // '전체' 탭 활성화 (마켓으로 올 때)
     navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
     renderProducts(currentProducts);
+    window.scrollTo(0, 0);
+  } else if (tab === 'chat') {
+    if (chatSection) chatSection.style.display = 'block';
+    showChatList();
     window.scrollTo(0, 0);
   }
 }
@@ -1408,9 +1414,17 @@ function openChat(chatId, withNickname, product) {
   localStorage.setItem('lastReadChats', JSON.stringify(lastRead));
 
   closeModal('productModal');
-  closeModal('chatListModal');
-  const chatModal = document.getElementById('chatModal');
-  if (chatModal) chatModal.classList.add('active');
+
+  const chatSection = document.getElementById('chatSection');
+  const chatListView = document.getElementById('chatListView');
+  const chatRoomView = document.getElementById('chatRoomView');
+
+  if (chatListView) chatListView.style.display = 'none';
+  if (chatRoomView) {
+    chatRoomView.style.display = 'flex';
+    // 모바일 등에서 레이아웃이 깨지지 않도록 강제 적용
+    chatRoomView.style.setProperty('display', 'flex', 'important');
+  }
 
   const chatInput = document.getElementById('chatInput');
   if (chatInput) {
@@ -1506,8 +1520,12 @@ async function showChatList() {
     return;
   }
 
-  const chatListModal = document.getElementById('chatListModal');
-  if (chatListModal) chatListModal.classList.add('active');
+  const chatListView = document.getElementById('chatListView');
+  const chatRoomView = document.getElementById('chatRoomView');
+
+  if (chatListView) chatListView.style.display = 'block';
+  if (chatRoomView) chatRoomView.style.display = 'none';
+
   closeDropdown();
 
   const chatsRef = collection(db, 'chats');
@@ -1540,14 +1558,15 @@ function renderChatList(chats) {
     const isUnread = (chat.updatedAt?.seconds || 0) > (lastRead[chat.id] || 0) && chat.lastMessageSender !== currentUser.uid;
 
     return `
-      <div class="chat-list-item" onclick="openChatFromList('${chat.id}', '${withNickname}', '${chat.productId}')" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; cursor: pointer; transition: background 0.2s; border: 1px solid ${isUnread ? 'var(--primary)' : 'var(--glass-border)'}; background: var(--surface-color); margin-bottom: 8px; position: relative;">
-        <img src="${chat.productImage}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;" onerror="this.src='placeholder.jpg'">
+      <div class="chat-list-item" onclick="openChatFromList('${chat.id}', '${withNickname}', '${chat.productId}')" 
+        style="display: flex; align-items: center; gap: 12px; padding: 12px; cursor: pointer; border: 1px solid ${isUnread ? 'var(--primary)' : 'var(--glass-border)'}; position: relative; margin-bottom: 8px;">
+        <img src="${chat.productImage}" style="width: 52px; height: 52px; border-radius: 12px; object-fit: cover;" onerror="this.src='placeholder.jpg'">
         <div style="flex: 1; overflow: hidden;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-            <span style="font-weight: 700; font-size: 15px; color: ${isUnread ? 'var(--primary-light)' : 'var(--text-primary)'};">${withNickname}</span>
+            <span style="font-weight: 700; font-size: 15px; color: ${isUnread ? 'var(--primary)' : 'var(--text-primary)'};">${withNickname}</span>
             <span style="font-size: 11px; color: var(--text-tertiary);">${chat.updatedAt?.seconds ? new Date(chat.updatedAt.seconds * 1000).toLocaleDateString('ko-KR') : ''}</span>
           </div>
-          <div style="font-size: 13px; color: ${isUnread ? 'var(--text-primary)' : 'var(--text-secondary)'}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: ${isUnread ? '600' : '400'};">${chat.lastMessage || '대화가 없습니다.'}</div>
+          <div style="font-size: 13px; color: ${isUnread ? 'var(--text-primary)' : 'var(--text-secondary)'}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: ${isUnread ? '600' : '400'};">${chat.lastMessage || '대화 내용이 없습니다.'}</div>
           <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 4px; font-weight: 500;">${chat.productTitle}</div>
         </div>
         ${isUnread ? '<span class="chat-unread-indicator"></span>' : ''}
@@ -1557,8 +1576,16 @@ function renderChatList(chats) {
 }
 
 function openChatFromList(chatId, withNickname, productId) {
-  const product = products.find(p => p.id === productId) || { title: '알 수 없는 상품', image: 'placeholder.jpg' };
+  const product = products.find(p => p.id === productId) || { title: '정보 없는 상품', image: 'placeholder.jpg' };
   openChat(chatId, withNickname, product);
+}
+
+function showChatListTab() {
+  const chatListView = document.getElementById('chatListView');
+  const chatRoomView = document.getElementById('chatRoomView');
+  if (chatListView) chatListView.style.display = 'block';
+  if (chatRoomView) chatRoomView.style.display = 'none';
+  showChatList(); // Load chat list when the tab is shown
 }
 
 // ===== Window 객체에 함수 할당 (필수) =====
@@ -1587,6 +1614,8 @@ window.handleEditProduct = handleEditProduct;
 window.resetFilters = resetFilters;
 window.showGuide = showGuide;
 window.showFeeInfo = showFeeInfo;
+window.showChatListTab = showChatListTab;
+window.switchTab = switchTab;
 window.showCommunityWriteModal = showCommunityWriteModal;
 window.handlePostCommunity = handlePostCommunity;
 window.togglePostLike = togglePostLike;
