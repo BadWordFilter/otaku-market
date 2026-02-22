@@ -1246,16 +1246,16 @@ function switchTab(tab) {
     if (marketplaceSection) marketplaceSection.style.display = 'block';
     if (nav) nav.style.display = 'block'; // Show categories on market
     if (headerCommunityBtn) {
-      headerCommunityBtn.innerHTML = '� 커뮤니티';
+      headerCommunityBtn.innerHTML = '💬 커뮤니티';
       headerCommunityBtn.setAttribute('onclick', "switchTab('community')");
     }
-    // '전체' 탭 활성화 (마켓으로 올 때)
     navItems.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-category') === 'all'));
     renderProducts(currentProducts);
     window.scrollTo(0, 0);
   } else if (tab === 'chat') {
     if (chatSection) chatSection.style.display = 'block';
     showChatList();
+    if (nav) nav.style.display = 'none';
     window.scrollTo(0, 0);
   }
 }
@@ -1418,6 +1418,11 @@ function openChat(chatId, withNickname, product) {
   const chatSection = document.getElementById('chatSection');
   const chatListView = document.getElementById('chatListView');
   const chatRoomView = document.getElementById('chatRoomView');
+
+  // 채팅 탭 활성화 상태 확인 및 전환
+  if (activeTab !== 'chat') {
+    switchTab('chat');
+  }
 
   if (chatListView) chatListView.style.display = 'none';
   if (chatRoomView) {
@@ -1619,7 +1624,6 @@ window.switchTab = switchTab;
 window.showCommunityWriteModal = showCommunityWriteModal;
 window.handlePostCommunity = handlePostCommunity;
 window.togglePostLike = togglePostLike;
-window.switchTab = switchTab;
 window.showEditProfileModal = showEditProfileModal;
 window.handleUpdateProfile = handleUpdateProfile;
 window.handlePurchaseProduct = handlePurchaseProduct;
